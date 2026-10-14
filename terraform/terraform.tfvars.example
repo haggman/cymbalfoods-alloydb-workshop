@@ -1,0 +1,12 @@
+# For applying by hand. At Start Lab the platform injects these and no tfvars file
+# exists. ⚠️ Only platform-injected variables belong here: if an apply needs one
+# that isn't, you have found a Start Lab failure. Fix the config instead.
+#
+# ⚠️ username is the LOCAL PART of your lab login (student-03-abc123), no @domain.
+gcp_project_id = "qwiklabs-gcp-00-xxxxxxxxxxxx"
+gcp_region     = "us-central1"
+gcp_zone       = "us-central1-a"
+username       = "student-03-xxxxxxxxxxxx"
+
+# Applying in a non-lab project? Override the domain too:
+# student_email_domain = "example.com"
