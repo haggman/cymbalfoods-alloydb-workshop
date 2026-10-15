@@ -109,6 +109,13 @@ curl -fsSL https://raw.githubusercontent.com/haggman/cymbalgoal-alloydb-workshop
 ```
 For aldb002, "the notebook connects" means its student-login line shows `postgres: connected as …`. That's the same connector call a Colab notebook makes.
 
+## Run 2, first attempt (Oct 15, aldb003)
+
+- **Answered: the Admin API accepts the student's role in `databaseRoles`.** `users.patch` made the VM's login a member in 3.9 s, and `SET ROLE` then `CREATE DATABASE` worked, so the database is the student's.
+- **Data API:** PATCH accepted on `/v1/`; the restart took 138 s, overlapped with the 16 s source copy.
+- **Failed at extensions:** they were created in alphabetical order, and `alloydb_scann` requires `vector`. Fixed: explicit order plus `CASCADE`. The re-run also skips the Data API PATCH when it already reads ENABLED, so it doesn't restart the instance twice.
+- Re-run in the same project with `RESUME=1 bash build/skeleton/02-cold-start.sh aldb003` (after a pull).
+
 ## What run 2 decides
 
 These are the open questions in the design. The bootstrap reports each one, so a failure tells you which fallback to take.

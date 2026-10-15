@@ -598,15 +598,15 @@ def build_indexes(sess):
     HB["checks"]["index_build_seconds"] = round(time.time() - t0, 1)
 
 
-EXTENSIONS = {"vector", "google_ml_integration"}
-
-
 def ensure_extensions(sess):
-    exts = set(EXTENSIONS)
+    # ⚠️ ORDER MATTERS: alloydb_scann requires vector, so vector goes first.
+    # (Measured 2026-10-15: alphabetical order failed with 'required extension
+    # "vector" is not installed'.) CASCADE as a second guard.
+    exts = ["vector", "google_ml_integration"]
     if INDEXES == "scann":
-        exts |= {"alloydb_scann", "pg_trgm"}   # pg_trgm: QueryData value searches (mkt014)
-    for e in sorted(exts):
-        sess.run(f"CREATE EXTENSION IF NOT EXISTS {e}")
+        exts += ["alloydb_scann", "pg_trgm"]   # pg_trgm: QueryData value searches (mkt014)
+    for e in exts:
+        sess.run(f"CREATE EXTENSION IF NOT EXISTS {e} CASCADE")
 
 
 # ---------------------------------------------------------------------------
@@ -668,7 +668,11 @@ def main():
         op = None
         if DATA_API:
             steps.next("turn on the Data API")
-            op = data_api_fire()
+            if data_api_state() == "ENABLED":
+                log("  already ENABLED; no PATCH, no restart")
+                HB["notes"].append("Data API already ENABLED; PATCH skipped")
+            else:
+                op = data_api_fire()
 
         if not DATASETS:
             steps.next("nothing to load")
@@ -689,9 +693,10 @@ def main():
 
             if DATA_API:
                 steps.next("wait for the Data API restart")
-                done = wait_op(op)
-                if "error" in done:
-                    raise Fatal(f"Data API operation failed: {json.dumps(done['error'])[:300]}")
+                if op:
+                    done = wait_op(op)
+                    if "error" in done:
+                        raise Fatal(f"Data API operation failed: {json.dumps(done['error'])[:300]}")
                 wait_instance_ready()
 
             steps.next("join the student's role")

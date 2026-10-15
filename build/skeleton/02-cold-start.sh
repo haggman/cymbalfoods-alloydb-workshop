@@ -16,19 +16,31 @@
 #   5. prints one HANDBACK block. Paste that back.
 #
 # Leaves everything running. The Terraform state is in ~/cg-cold-<module>.
+#
+# RE-RUN after a bootstrap fix, in the SAME project (git pull first):
+#   RESUME=1 bash build/skeleton/02-cold-start.sh aldb003
+# Copies the fixed module over the existing work folder (state kept), applies
+# (which uploads the new bootstrap code), resets the setup VM so it runs again,
+# and does everything from step 2 on. The clock starts at the reset, so read the
+# VM's per-step times, not the cluster time; that comes from the first run.
 # =============================================================================
 set -uo pipefail
 source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
 MODULE="${1:-aldb003}"
 W="$HOME/cg-cold-${MODULE}"
-if [ -f "$W/terraform.tfstate" ] && [ "${FORCE:-}" != "1" ]; then
+if [ "${RESUME:-}" = "1" ]; then
+  [ -f "$W/terraform.tfstate" ] || { echo "RESUME=1 needs the earlier run's state in $W"; exit 1; }
+  cp -r "${REPO}/terraform/." "$W/"
+  rm -rf "$W"/bootstrap/workload/out
+elif [ -f "$W/terraform.tfstate" ] && [ "${FORCE:-}" != "1" ]; then
   echo "$W already has state, so this would not be a cold start. Use a fresh project,"
   echo "or FORCE=1 to re-run against what is there (timings then mean nothing)."
   exit 1
 fi
 [ -f "$W/terraform.tfstate" ] || stage_module "$W" "${MODULE}"
 cd "$W"
-LOG="$W/run.log"; : > "${LOG}"
+LOG="$W/run.log"
+if [ "${RESUME:-}" = "1" ]; then printf '\n---- RESUME %s ----\n' "$(date -u +%H:%M:%S)" >> "${LOG}"; else : > "${LOG}"; fi
 say() { printf '%s %s\n' "$(date -u +%H:%M:%S)" "$1" | tee -a "${LOG}"; }
 el() { local s=$(( $(date +%s) - T0 )); printf '%dm%02ds' $((s / 60)) $((s % 60)); }
 
@@ -37,8 +49,21 @@ PIP=$!
 
 terraform init -input=false -no-color > init.log 2>&1 || { tail -20 init.log; exit 1; }
 T0=$(date +%s)
-say "apply 1 started (this is the Start Lab clock)"
-terraform apply -auto-approve -input=false -no-color > apply1.log 2>&1; A1=$?
+if [ "${RESUME:-}" = "1" ]; then
+  say "resume: apply to upload the fixed bootstrap code"
+  terraform apply -auto-approve -input=false -no-color > apply1.log 2>&1; A1=$?
+  say "resume apply exit ${A1}; changed: $(grep -cE 'Modifications complete|Creation complete|Destruction complete' apply1.log) resources"
+  if [ ${A1} -eq 0 ]; then
+    gcloud storage rm --quiet "gs://${PROJECT}-cymbalgoal-staging/setup/status" >/dev/null 2>&1
+    gcloud compute instances reset cymbalgoal-setup --zone="${ZONE}" --quiet >/dev/null 2>&1 \
+      || gcloud compute instances start cymbalgoal-setup --zone="${ZONE}" --quiet >/dev/null 2>&1
+    T0=$(date +%s)
+    say "setup VM reset; clock restarted"
+  fi
+else
+  say "apply 1 started (this is the Start Lab clock)"
+  terraform apply -auto-approve -input=false -no-color > apply1.log 2>&1; A1=$?
+fi
 A1_T=$(el); say "apply 1 exit ${A1} at ${A1_T}"
 if [ ${A1} -ne 0 ]; then grep -E "Error" -A8 apply1.log | head -60; fi
 terraform apply -auto-approve -input=false -no-color > apply2.log 2>&1; A2=$?
