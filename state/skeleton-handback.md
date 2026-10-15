@@ -115,6 +115,7 @@ For aldb002, "the notebook connects" means its student-login line shows `postgre
 - **Data API:** PATCH accepted on `/v1/`; the restart took 138 s, overlapped with the 16 s source copy.
 - **Failed at extensions:** they were created in alphabetical order, and `alloydb_scann` requires `vector`. Fixed: explicit order plus `CASCADE`. The re-run also skips the Data API PATCH when it already reads ENABLED, so it doesn't restart the instance twice.
 - Re-run in the same project with `RESUME=1 bash build/skeleton/02-cold-start.sh aldb003` (after a pull).
+- **Second attempt (RESUME):** every load finished, 11 of 11 steps in 9m07s from VM boot, and the database owner is the student. It stopped at the ownership check, which counted 51 relations in `public` not owned by the student. Most likely cause: members of a trusted extension belong to the bootstrap superuser whoever ran `CREATE EXTENSION`. The check now leaves extension members out (reporting them by extension and owner), logs anything else by name, and fails only on non-extension objects.
 
 ## What run 2 decides
 

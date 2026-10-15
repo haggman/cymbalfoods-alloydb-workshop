@@ -616,11 +616,31 @@ def checks(sess):
     ck = HB["checks"]
     ck["database_owner"] = sess.one(
         "SELECT pg_catalog.pg_get_userbyid(datdba) FROM pg_database WHERE datname = current_database()")
-    ck["objects_not_owned_by_student"] = [f"{r[0]} ({r[1]}) owner {r[2]}" for r in sess.rows(
-        "SELECT c.relname, c.relkind, pg_catalog.pg_get_userbyid(c.relowner) FROM pg_class c "
-        "JOIN pg_namespace n ON n.oid = c.relnamespace WHERE n.nspname = 'public' "
+    # Relations in public not owned by the student, split into extension members
+    # and everything else. Members of a trusted extension are owned by the
+    # bootstrap superuser no matter who ran CREATE EXTENSION (PostgreSQL 13+),
+    # so they are expected and the student never manages them directly. Only
+    # the rest counts against ownership. (Measured 2026-10-15: the first check
+    # counted 51 objects without making this split.)
+    rows = sess.rows(
+        "SELECT c.relname, c.relkind, pg_catalog.pg_get_userbyid(c.relowner), "
+        "  EXISTS (SELECT 1 FROM pg_depend d WHERE d.classid = 'pg_class'::regclass "
+        "          AND d.objid = c.oid AND d.deptype = 'e') AS ext_member, "
+        "  (SELECT e.extname FROM pg_depend d JOIN pg_extension e ON e.oid = d.refobjid "
+        "    WHERE d.classid = 'pg_class'::regclass AND d.objid = c.oid AND d.deptype = 'e' LIMIT 1) "
+        "FROM pg_class c JOIN pg_namespace n ON n.oid = c.relnamespace WHERE n.nspname = 'public' "
         "AND c.relkind IN ('r','p','i','S','v','m') AND pg_catalog.pg_get_userbyid(c.relowner) <> %s",
-        (STUDENT,))]
+        (STUDENT,))
+    ck["objects_not_owned_by_student"] = [f"{r[0]} ({r[1]}) owner {r[2]}" for r in rows if not r[3]]
+    by_ext = {}
+    for r in rows:
+        if r[3]:
+            key = f"{r[4]} (owner {r[2]})"
+            by_ext[key] = by_ext.get(key, 0) + 1
+    ck["extension_member_objects_by_extension"] = by_ext
+    log(f"  extension members not owned by the student: {by_ext or 'none'}")
+    for line in ck["objects_not_owned_by_student"][:25]:
+        log(f"  NOT the student's: {line}")
     ck["extensions"] = {r[0]: f"{r[1]} owner {r[2]}" for r in sess.rows(
         "SELECT extname, extversion, pg_catalog.pg_get_userbyid(extowner) FROM pg_extension ORDER BY 1")}
     ck["tables"] = {r[0]: r[1] for r in sess.rows(
@@ -632,7 +652,8 @@ def checks(sess):
     ck["student_owns_everything"] = ok
     if not ok:
         raise Fatal(f"ownership check failed: database owner {ck['database_owner']}, "
-                    f"{len(ck['objects_not_owned_by_student'])} objects owned by someone else")
+                    f"{len(ck['objects_not_owned_by_student'])} objects owned by someone else, e.g. "
+                    + "; ".join(ck["objects_not_owned_by_student"][:3]))
 
 
 # ---------------------------------------------------------------------------
