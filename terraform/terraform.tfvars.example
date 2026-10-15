@@ -8,5 +8,8 @@ gcp_region     = "us-central1"
 gcp_zone       = "us-central1-a"
 username       = "student-03-xxxxxxxxxxxx"
 
+# Which Track A lab to provision (modules.tf). Default aldb002: cluster only, no setup VM.
+# lab_module = "aldb003"
+
 # Applying in a non-lab project? Override the domain too:
 # student_email_domain = "example.com"

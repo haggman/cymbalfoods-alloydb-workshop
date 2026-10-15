@@ -1,15 +1,21 @@
 # =============================================================================
-# CymbalGoal AlloyDB Workshop — cluster provisioning
+# CymbalGoal AlloyDB Workshop — shared provisioning for Track A (aldb001–aldb005)
 # =============================================================================
-# Provisions the CLUSTER, its primary instance, the student's database login, and
-# a staging bucket AlloyDB can import from. Nothing that needs SQL: Terraform has
-# no google_alloydb_database resource and its runner is outside the VPC. The
-# database, schema, data load and indexes are done from the notebooks, which
-# reach the cluster through the AlloyDB Python Connector with IAM auth.
+# One module, five labs. `lab_module` picks a column of the feature map in
+# modules.tf, and every resource that only some labs need reads its switch from
+# it. With lab_module = "aldb002" (the default) this provisions exactly what it
+# did before the switches existed: the cluster, its primary instance, the
+# student's database login, and a staging bucket AlloyDB can import from.
 #
-# A database created by provisioning would also be owned by `postgres`, and
-# alloydbsuperuser is not a true superuser, so the student could not fully manage
-# it. The student creates their own database instead.
+# Terraform cannot run SQL: there is no google_alloydb_database resource and the
+# runner is outside the VPC. Labs whose data must be there when the student
+# arrives get the setup VM (setup_vm.tf), which loads it from inside the VPC.
+# aldb002 has no VM: its notebook builds the database in Task 1.
+#
+# ⚠️ Whoever creates a database owns it, and alloydbsuperuser is not a true
+# superuser, so a database owned by `postgres` or a service account cannot be
+# fully managed by the student. The setup VM therefore creates everything AS the
+# student (SET ROLE), never as itself. See bootstrap/bootstrap.py.
 #
 # Apply twice when testing: `terraform plan -detailed-exitcode` must exit 0 on the
 # second run. Two traps below only show up on a re-apply.
@@ -35,8 +41,9 @@ data "google_project" "current" {
 # -----------------------------------------------------------------------------
 # APIs
 # -----------------------------------------------------------------------------
+# The base list every module gets, plus the module's extra_apis (modules.tf).
 resource "google_project_service" "apis" {
-  for_each = toset([
+  for_each = toset(concat([
     "alloydb.googleapis.com",
     "compute.googleapis.com",
     "servicenetworking.googleapis.com",
@@ -48,14 +55,15 @@ resource "google_project_service" "apis" {
     # ai.rank()'s semantic reranker is served by Discovery Engine. Enabling the API
     # is necessary but NOT sufficient: see alloydb_discoveryengine below.
     "discoveryengine.googleapis.com",
-  ])
+  ], local.f.extra_apis))
   service            = each.value
   disable_on_destroy = false
 }
 
 # -----------------------------------------------------------------------------
 # Network: AlloyDB is VPC-native and needs Private Service Access even when it is
-# reached over its public IP. No subnet, NAT or firewall rules are needed.
+# reached over its public IP. Notebooks and Cloud Shell need no subnet, NAT or
+# firewall rules; the setup VM's subnet and SSH rule are in setup_vm.tf.
 # -----------------------------------------------------------------------------
 resource "google_compute_network" "main" {
   name                    = local.network
@@ -69,7 +77,10 @@ resource "google_compute_global_address" "psa" {
   address_type  = "INTERNAL"
   prefix_length = 20
   network       = google_compute_network.main.id
-  depends_on    = [google_project_service.apis]
+
+  # The setup subnet (when there is one) exists first, so the automatically
+  # allocated peering range can never overlap it.
+  depends_on = [google_project_service.apis, google_compute_subnetwork.setup]
 }
 
 resource "google_service_networking_connection" "psa" {
@@ -110,17 +121,48 @@ resource "google_alloydb_cluster" "main" {
 # -----------------------------------------------------------------------------
 # Primary instance
 # -----------------------------------------------------------------------------
+locals {
+  # On when the module teaches it (aldb005), or when the variable says so for a
+  # hand apply. variables.tf explains why it is off everywhere else.
+  columnar = var.enable_columnar_engine || local.f.columnar
+
+  # ⚠️ Every name verified against GET .../supportedDatabaseFlags. One unknown name
+  # and AlloyDB rejects the WHOLE instance create: every student gets a cluster
+  # with no instance. Never add an unchecked name. Flags are per-instance, so the
+  # read pool below uses this same map.
+  instance_flags = merge({
+    "password.enforce_complexity"                       = "on" # mandatory with public IP
+    "alloydb.iam_authentication"                        = "on" # lets the IAM users log in
+    "google_ml_integration.enable_preview_ai_functions" = "on" # ai.* preview functions (PG 17/18)
+    # Already on by default, so not set: google_ml_integration.enable_model_support,
+    # enable_ai_query_engine, enable_faster_embedding_generation.
+    }, local.columnar ? {
+    "google_columnar_engine.enabled" = "on"
+    # Shipped in mkt015's instance flags, so the name is proven. Off means the
+    # engine is ready but nothing is columnarized behind the lab's back: the
+    # planner keeps using real indexes until a task adds tables to the column
+    # store. Turning the engine itself on needs a restart; this one does not.
+    "google_columnar_engine.enable_auto_columnarization" = "off"
+  } : {})
+}
+
 resource "google_alloydb_instance" "primary" {
+  # google-beta in every module: observability_config (aldb005) exists only in
+  # the beta provider at 7.35.0, and a resource cannot switch providers per
+  # module. For the other modules only the provider address differs.
+  provider = google-beta
+
   cluster       = google_alloydb_cluster.main.name
   instance_id   = local.instance_id
   instance_type = "PRIMARY"
 
-  # ⚠️ NOT the default. A PRIMARY defaults to REGIONAL: an HA pair, which doubles
-  # the capacity every student needs scheduled at the same moment. Measured in
-  # us-central1: "does not have enough resources available to fulfill the
-  # request". ZONAL is one node; nothing in the workshop needs failover.
+  # ⚠️ ZONAL unless the module teaches failover. A PRIMARY defaults to REGIONAL:
+  # an HA pair, which doubles the capacity every student needs scheduled at the
+  # same moment. Measured in us-central1: "does not have enough resources
+  # available to fulfill the request". aldb005's failover task needs the pair
+  # and takes that risk; no other module does.
   # ⚠️ Do NOT add gce_zone: pinning a zone narrows where capacity can be found.
-  availability_type = "ZONAL"
+  availability_type = local.f.ha ? "REGIONAL" : "ZONAL"
 
   machine_config {
     cpu_count = var.cpu_count
@@ -129,28 +171,76 @@ resource "google_alloydb_instance" "primary" {
   # Public IP, reached only through the AlloyDB Python Connector with IAM auth.
   # IAM gates access and the connector carries mTLS, so there are deliberately NO
   # authorized networks. Any Colab runtime can connect; no VPC attachment needed.
+  # The setup VM uses the private IP from inside the VPC.
   network_config {
     enable_public_ip = true
   }
 
-  # ⚠️ Every name verified against GET .../supportedDatabaseFlags. One unknown name
-  # and AlloyDB rejects the WHOLE instance create: every student gets a cluster
-  # with no instance. Never add an unchecked name. Flags are per-instance: a read
-  # pool would need every one repeated.
-  database_flags = merge({
-    "password.enforce_complexity"                       = "on" # mandatory with public IP
-    "alloydb.iam_authentication"                        = "on" # lets the IAM user log in
-    "google_ml_integration.enable_preview_ai_functions" = "on" # ai.* preview functions (PG 17/18)
-    # Already on by default, so not set: google_ml_integration.enable_model_support,
-    # enable_ai_query_engine, enable_faster_embedding_generation.
-    }, var.enable_columnar_engine ? {
-    "google_columnar_engine.enabled" = "on"
-    # ⚠️ Not yet checked against supportedDatabaseFlags: verify before the first
-    # apply with enable_columnar_engine = true (see variables.tf for why it's here).
-    "google_columnar_engine.enable_auto_columnarization" = "off"
-  } : {})
+  database_flags = local.instance_flags
+
+  # Standard Query Insights, explicit where a module reads it (aldb005). Values
+  # carried from mkt015: long statements keep their sqlcommenter tags.
+  dynamic "query_insights_config" {
+    for_each = local.f.observability ? [1] : []
+    content {
+      record_application_tags = true
+      record_client_address   = true
+      query_plans_per_minute  = 20
+      query_string_length     = 4500
+    }
+  }
+
+  # Enhanced query insights (aldb005), carried from mkt015. ⚠️ track_active_queries
+  # defaults OFF; without it the Active Queries view has no data.
+  dynamic "observability_config" {
+    for_each = local.f.observability ? [1] : []
+    content {
+      enabled                 = true
+      track_wait_events       = true
+      track_wait_event_types  = true
+      track_active_queries    = true
+      preserve_comments       = true # keeps the workload's sqlcommenter tags
+      record_application_tags = true
+      track_client_address    = true
+      query_plans_per_minute  = 20
+      max_query_string_length = 20000
+      # ⚠️ true FAILS the instance create without Gemini Cloud Assist (mkt015,
+      # measured), and it is not what gates the console's AI troubleshooting.
+      assistive_experiences_enabled = false
+    }
+  }
 
   depends_on = [google_service_networking_connection.psa]
+}
+
+# -----------------------------------------------------------------------------
+# Read pool (aldb001): one node at arrival; the lab scales it
+# -----------------------------------------------------------------------------
+# Flags are per-instance, so it gets the primary's map verbatim. Public IP for
+# the same reason as the primary: the lab routes reads to it from Cloud Shell.
+resource "google_alloydb_instance" "read_pool" {
+  count    = local.f.read_pool ? 1 : 0
+  provider = google-beta
+
+  cluster       = google_alloydb_cluster.main.name
+  instance_id   = "cymbalgoal-read-pool"
+  instance_type = "READ_POOL"
+
+  read_pool_config {
+    node_count = 1
+  }
+
+  machine_config {
+    cpu_count = var.cpu_count
+  }
+
+  network_config {
+    enable_public_ip = true
+  }
+
+  database_flags = local.instance_flags
+
+  depends_on = [google_alloydb_instance.primary]
 }
 
 # -----------------------------------------------------------------------------
@@ -217,4 +307,17 @@ resource "google_alloydb_user" "student" {
   depends_on = [google_alloydb_instance.primary]
 }
 
-# No read pool, deliberately: nothing needs one and it costs provisioning time.
+# -----------------------------------------------------------------------------
+# Student project roles a module adds (modules.tf: student_roles)
+# -----------------------------------------------------------------------------
+# The student already has roles/owner. These are the permissions Google has been
+# minting outside the basic roles (QueryData in aldb003), granted explicitly
+# because finding out at Task 3 that owner was not enough costs the room 25
+# minutes. Same three mkt014 grants, proven at Start Lab there.
+resource "google_project_iam_member" "student_roles" {
+  for_each   = toset(local.f.student_roles)
+  project    = var.gcp_project_id
+  role       = each.value
+  member     = "user:${local.student_email}"
+  depends_on = [google_alloydb_cluster.main]
+}

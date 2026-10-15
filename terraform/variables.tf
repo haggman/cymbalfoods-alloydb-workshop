@@ -54,6 +54,30 @@ variable "username" {
   }
 }
 
+# ---- Module switches: set by each lab's thin root ---------------------------
+
+variable "lab_module" {
+  description = "Which Track A lab this is. Picks the column of the feature map in modules.tf."
+  type        = string
+  default     = "aldb002" # the module's behavior before the switches existed
+
+  validation {
+    condition     = contains(["aldb001", "aldb002", "aldb003", "aldb004", "aldb005"], var.lab_module)
+    error_message = "lab_module must be one of aldb001 through aldb005."
+  }
+}
+
+variable "track" {
+  description = "Workshop track. cloud is Track A; omni is reserved for Track B and not built."
+  type        = string
+  default     = "cloud"
+
+  validation {
+    condition     = var.track == "cloud"
+    error_message = "Only track = \"cloud\" is built. omni is reserved for Track B."
+  }
+}
+
 # ---- Tunables: not injected, defaults are the shipped values ----------------
 
 variable "cpu_count" {
@@ -84,3 +108,12 @@ variable "enable_columnar_engine" {
   default     = false
 }
 
+variable "setup_machine_type" {
+  description = <<-EOT
+    Setup VM shape (aldb001, 003, 004, 005). It streams files and runs SQL, so it
+    needs little; in aldb005 it also runs the deadline-day workload, which mkt015
+    ran from Cloud Shell. e2 keeps capacity risk low across a full room.
+  EOT
+  type        = string
+  default     = "e2-standard-4"
+}

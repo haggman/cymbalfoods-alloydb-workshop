@@ -1,0 +1,20 @@
+# aldb005: the deadline-day workload, started by startup.sh once the data is
+# loaded. Runs as the setup VM's service account, SET ROLE to the student, over
+# the private IP. Settings in /etc/default/cymbalgoal-workload.
+#   status:  sudo systemctl status cymbalgoal-workload
+#   report:  sudo /opt/cymbalgoal/venv/bin/python /opt/cymbalgoal/code/workload/deadline_day.py --report
+#   stop:    sudo systemctl stop cymbalgoal-workload
+[Unit]
+Description=CymbalGoal deadline-day workload
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+EnvironmentFile=/etc/default/cymbalgoal-workload
+WorkingDirectory=/opt/cymbalgoal/code/workload
+ExecStart=/opt/cymbalgoal/venv/bin/python -u /opt/cymbalgoal/code/workload/deadline_day.py
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
