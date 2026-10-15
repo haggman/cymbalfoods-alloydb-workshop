@@ -44,6 +44,7 @@ resource "google_project_service" "apis" {
     "cloudresourcemanager.googleapis.com",
     "iam.googleapis.com",
     "storage.googleapis.com",
+    "monitoring.googleapis.com", # instance CPU, read by the benchmark notebooks
     # ai.rank()'s semantic reranker is served by Discovery Engine. Enabling the API
     # is necessary but NOT sufficient: see alloydb_discoveryengine below.
     "discoveryengine.googleapis.com",
@@ -136,14 +137,18 @@ resource "google_alloydb_instance" "primary" {
   # and AlloyDB rejects the WHOLE instance create: every student gets a cluster
   # with no instance. Never add an unchecked name. Flags are per-instance: a read
   # pool would need every one repeated.
-  database_flags = {
+  database_flags = merge({
     "password.enforce_complexity"                       = "on" # mandatory with public IP
     "alloydb.iam_authentication"                        = "on" # lets the IAM user log in
     "google_ml_integration.enable_preview_ai_functions" = "on" # ai.* preview functions (PG 17/18)
-    "google_columnar_engine.enabled"                    = "on"
     # Already on by default, so not set: google_ml_integration.enable_model_support,
     # enable_ai_query_engine, enable_faster_embedding_generation.
-  }
+    }, var.enable_columnar_engine ? {
+    "google_columnar_engine.enabled" = "on"
+    # ⚠️ Not yet checked against supportedDatabaseFlags: verify before the first
+    # apply with enable_columnar_engine = true (see variables.tf for why it's here).
+    "google_columnar_engine.enable_auto_columnarization" = "off"
+  } : {})
 
   depends_on = [google_service_networking_connection.psa]
 }

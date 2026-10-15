@@ -70,3 +70,17 @@ variable "student_email_domain" {
   type        = string
   default     = "qwiklabs.net"
 }
+
+# ⚠️ Columnar engine: OFF unless a module teaches it. With it on, auto-columnarization
+# (hourly by default) loads busy tables into the column store, and the planner then
+# prices a full columnar scan below the ScaNN and HNSW indexes: vector searches drop
+# to 0.6-2.2 s full scans with exact sorts (measured in pipeline/04, Oct 2026).
+# Turning it on needs an instance restart, so a module that teaches it should set
+# this at provisioning. When on, auto-columnarization stays off and the module adds
+# its tables to the column store explicitly.
+variable "enable_columnar_engine" {
+  description = "Turn on the AlloyDB columnar engine (auto-columnarization stays off)."
+  type        = bool
+  default     = false
+}
+
