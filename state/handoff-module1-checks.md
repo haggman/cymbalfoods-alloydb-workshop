@@ -2,6 +2,8 @@
 
 Oct 15, 2026 · Track A build, written by the planning conversation
 
+> **Status, Oct 16:** the dataset is changing to Cymbal Foods (`state/handoff-dataset.md`). The CymbalGoal SQL Server package and the probes in `build/checks/module1/` still answer the DMS, CDC, DVT and read-pool questions; the dataset build's stage 3 replaces the package's schema and procedures and reuses its build and restore mechanics. The aldb001 Terraform switch in `terraform/modules.tf` (`sqlserver`) is still a stub.
+
 ## Context
 
 Track A of Google's AlloyDB workshop is five standalone Qwiklabs (aldb001–aldb005) on the CymbalGoal football data, built in order and due November 16. Module 1 is built next, so its risky features are checked now, in a fresh Qwiklabs project. This conversation does two things: builds the real legacy SQL Server package, and checks that the Module 1 lab can run on it. It writes no lab prose.

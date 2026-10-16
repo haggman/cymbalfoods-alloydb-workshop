@@ -2,6 +2,8 @@
 
 Oct 15, 2026 · Track A build, written by the planning conversation
 
+> **Status, Oct 16:** built and partly tested on CymbalGoal, then paused when Google moved the workshop to the Cymbal Foods dataset. What was proven, what changes, and the shorter version 2 plan are in `state/skeleton-handback.md`.
+
 ## Context
 
 Track A of Google's AlloyDB workshop is five standalone Qwiklabs (aldb001–aldb005) on the CymbalGoal football data. Every lab cold-starts: the student clicks Start Lab, waits 15–20 minutes, and proceeds. Labs are built in order, Module 1 first, and are due November 16. This conversation builds the provisioning every module shares. It writes no lab prose.

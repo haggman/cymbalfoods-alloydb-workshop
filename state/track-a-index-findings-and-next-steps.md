@@ -3,6 +3,13 @@
 Oct 14, 2026 · Patrick Haggerty
 Live version: https://claude.ai/code/artifact/f2810753-3b3c-4e8e-8970-d7d7906251bb
 
+## Status, Oct 16
+
+- **Dataset:** Google moved the workshop from CymbalGoal to **Cymbal Foods**; `state/handoff-dataset.md` is the build plan. The numbers below were measured on the CymbalGoal scouting reports. The mechanisms behind them (ScaNN's re-ranking cost, the planner abandoning HNSW at high `ef_search`, the columnar engine taking over vector searches) are properties of AlloyDB and carry over, but the figures need re-measuring on the new corpus before slides or labs quote them.
+- **Columnar off by default** stands: it's built into the shared Terraform, and only aldb005 turns it on (with auto-columnarization off).
+- **Provisioning:** the shared Terraform with per-lab switches and the setup VM are built. On real AlloyDB the setup VM loaded a lab's data with the student owning the database and no student action. Status, findings and the version 2 plan are in `state/skeleton-handback.md`.
+- **Load-time warning for the new slice:** server-side import was markedly slower than client COPY on the same data (roughly 7 to 8 minutes against 3). The Cymbal Foods lab slice is about three times larger.
+
 ## Where things stand
 
 The vector-index work for Module 2 is done. On a clean 8-vCPU cluster, tuned ScaNN serves 39% more searches per second than HNSW at about 95% recall, from an index about a tenth the size. Tuning ScaNN's re-ranking step matters more than which index you choose: it nearly quadruples ScaNN's throughput.
