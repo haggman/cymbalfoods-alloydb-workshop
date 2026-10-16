@@ -1,9 +1,10 @@
 # Cymbal Foods generator. Python 3.11+. Byte-for-byte reproducibility holds for the same versions of these
 # libraries; out/manifest.json records the versions each run used. Developed on Python 3.13, numpy 2.5.3,
-# pandas 3.0.5, pyarrow 26.0.0, duckdb 1.5.6.
+# pandas 3.0.5, pyarrow 26.0.0, duckdb 1.5.6. Also run on Colab's stack (Python 3.12, numpy 2.0.2, pandas 2.2.2,
+# pyarrow 18.1.0): every table, slice and SQL file came out identical.
 numpy>=2.0,<3
 pandas>=2.2
 pyarrow>=17
-duckdb>=1.1
+duckdb>=1.4,<2      # 1.1 took 12 min to validate full scale; 1.4+ takes seconds
 pyyaml>=6
 pytz          # duckdb needs it to return timestamps to Python

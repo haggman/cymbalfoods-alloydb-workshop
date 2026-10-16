@@ -142,10 +142,18 @@ def main() -> int:
             log("GA4 clickstream for 2026")
             extra["ga4"] = clickstream.build(cat, cons, O, L, dem, ga4_dir)
             t = tick("ga4", t)
+        # validation and slicing read the Parquet back through DuckDB; free the in-memory frames first
+        # (with pandas 2 they hold ~3 GB at full scale, enough to push an 8 GB machine over)
+        del tables, O, L, cons, acc, cp, res, inv, rp, sups, sup_ing, dem, cat, P, places, names
+        del f_reviews, f_quality, f_notes, f_recipes, f_recipe_products, f_desc, df, acc_extra, ring
+        del first, ca, late, newc
+        import gc
+        gc.collect()
         if not a.skip_validate:
             log("validating")
             rep = validate.run(out, ga4_dir if not a.no_ga4 else None, extra)
             t = tick("validate", t)
+            shutil.rmtree(out / ".duckdb_tmp", ignore_errors=True)
             extra["problems"] = rep["problems"]
             log(f"validation: {len(rep['problems'])} problems")
             for p in rep["problems"]:
@@ -179,7 +187,7 @@ def main() -> int:
     manifest["elapsed_seconds"] = round(time.time() - t0, 1)
     mpath.write_text(json.dumps(manifest, indent=1, default=str) + "\n", encoding="utf-8")
     log(f"done in {manifest['elapsed_seconds']}s → {out}")
-    return 1 if extra.get("problems") else 0
+    return 3 if extra.get("problems") else 0          # 3 = validation problems; a crash exits 1, bad content 2
 
 
 if __name__ == "__main__":

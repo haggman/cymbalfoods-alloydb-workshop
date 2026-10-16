@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 
 from . import config as C
-from .util import rng, stable_hash, uuids
+from .util import rng, stable_hash, utc64, uuids
 
 
 def make_ring(consumers: pd.DataFrame, cat: dict) -> tuple[pd.DataFrame, dict]:
@@ -72,8 +72,8 @@ def score(O: pd.DataFrame, Lx: pd.DataFrame, consumers: pd.DataFrame, ring: dict
     n = len(on)
     base = r.beta(1.3, 16, n)
     cust = O.x_cust.to_numpy()[on]
-    created = consumers.created_at.to_numpy()[cust]
-    age_d = (O.ordered_at.to_numpy()[on] - created) / np.timedelta64(1, "D")
+    created = utc64(consumers.created_at)[cust]
+    age_d = (utc64(O.ordered_at)[on] - created) / np.timedelta64(1, "D")
     sub = O.subtotal.to_numpy()[on]
     flags_new = age_d < 7
     flags_val = sub > 250

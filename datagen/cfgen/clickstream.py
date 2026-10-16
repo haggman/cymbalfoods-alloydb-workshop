@@ -94,7 +94,9 @@ def build(cat: dict, consumers: pd.DataFrame, O: pd.DataFrame, Lx: pd.DataFrame,
         cust[len(conv):][signed[len(conv):]] = weighted_choice(r, cust_w, k)
         guest = np.zeros(ns, dtype=bool)
         guest[cust >= 0] = consumers.account_type.to_numpy()[cust[cust >= 0]] == "guest"
-        anon_id = r.zipf(1.3, ns) % anon_pool
+        # heavy-tailed repeat visitors; inverse-CDF from uniforms rather than r.zipf, whose sampler changed
+        # between numpy releases (2.0 vs 2.5 gave different streams)
+        anon_id = np.floor(np.minimum((1.0 - r.random(ns)) ** (-1 / 0.3), 1e15)).astype(np.int64) % anon_pool
         pseudo = np.array([f"{int(stable_hash(f'c{c}', 9), 16) % 10**9}.{1600000000 + (c % 9_000_000)}" if c >= 0 else
                            f"{int(stable_hash(f'a{a}', 9), 16) % 10**9}.{1650000000 + int(a)}" for c, a in zip(cust, anon_id)], dtype=object)
         user_id = np.where((cust >= 0) & ~guest, consumers.customer_number.to_numpy()[np.maximum(cust, 0)], None)

@@ -79,3 +79,15 @@ def weighted_choice(r: np.random.Generator, weights: np.ndarray, n: int) -> np.n
     cdf = np.cumsum(w / s)
     cdf[-1] = 1.0
     return np.searchsorted(cdf, r.random(n), side="right").clip(0, len(w) - 1)
+
+
+def utc64(s) -> np.ndarray:
+    """A tz-aware datetime Series as a naive-UTC datetime64[ns] array.
+
+    pandas 3 gives datetime64 from .to_numpy() on tz-aware columns; pandas 2 gives an object array of
+    Timestamps, which numpy can't do arithmetic on. Use this wherever a timestamp column goes to numpy."""
+    import pandas as pd
+    s = pd.Series(s) if not isinstance(s, pd.Series) else s
+    if getattr(s.dt, "tz", None) is not None:
+        s = s.dt.tz_convert("UTC").dt.tz_localize(None)
+    return s.to_numpy(dtype="datetime64[ns]")

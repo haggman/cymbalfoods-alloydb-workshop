@@ -10,7 +10,7 @@ import pandas as pd
 
 from . import config as C
 from .supply import DCS
-from .util import rng, uuids, weighted_choice
+from .util import rng, utc64, uuids, weighted_choice
 
 GROUND_FORMS = {"ground", "powder", "granulated", "fine", "toasted ground", "blend", "flakes", "crushed"}
 LIQUID_FAMILIES = {"oil", "vinegar", "sauce", "syrup", "extract"}
@@ -32,7 +32,7 @@ def reviews(cat: dict, consumers: pd.DataFrame, O: pd.DataFrame, Lx: pd.DataFram
     pick = np.sort(cand[weighted_choice(r, w, int(n * 1.1))])
     pick = np.unique(pick)
     R = Lx.iloc[pick][["x_order", "x_sku", "line_no", "order_id", "sku_id", "batch_id", "x_batch", "x_channel"]].copy()
-    R["ordered_at"] = O.ordered_at.to_numpy()[R.x_order]
+    R["ordered_at"] = O.ordered_at.iloc[R.x_order.to_numpy()].set_axis(R.index)
     R["submitted_at"] = R.ordered_at + pd.to_timedelta(r.integers(4 * 24, 40 * 24, len(R)), "h") + pd.to_timedelta(r.integers(0, 3600, len(R)), "s")
     R = R[R.submitted_at < pd.Timestamp(C.NOW_UTC)]
     R = R.iloc[np.sort(r.choice(len(R), size=min(n, len(R)), replace=False))].copy()
@@ -47,7 +47,7 @@ def reviews(cat: dict, consumers: pd.DataFrame, O: pd.DataFrame, Lx: pd.DataFram
     bdc = np.where(R.x_batch.to_numpy() >= 0, B.dc_id.to_numpy()[np.maximum(R.x_batch.to_numpy(), 0)], None)
     bmon = np.where(R.x_batch.to_numpy() >= 0, B.produced_at.dt.month.to_numpy()[np.maximum(R.x_batch.to_numpy(), 0)], 0)
     bage = np.where(R.x_batch.to_numpy() >= 0,
-                    (R.ordered_at.to_numpy() - B.produced_at.to_numpy()[np.maximum(R.x_batch.to_numpy(), 0)]) / np.timedelta64(1, "D"), 0)
+                    (utc64(R.ordered_at) - utc64(B.produced_at)[np.maximum(R.x_batch.to_numpy(), 0)]) / np.timedelta64(1, "D"), 0)
     held = np.isin(R.x_batch.to_numpy(), sup["hold_batches"])
     m = len(R)
     T = C.REVIEW_THEMES

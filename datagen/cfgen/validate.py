@@ -14,10 +14,29 @@ from . import config as C
 from .schemas import T
 
 
+def _mem_available_gb() -> float | None:
+    try:
+        for line in open("/proc/meminfo"):
+            if line.startswith("MemAvailable:"):
+                return int(line.split()[1]) / 2**20
+    except OSError:
+        return None
+    return None
+
+
 def run(out: Path, ga4_dir: Path | None, extra: dict) -> dict:
     pq_dir = out / "parquet"
     con = duckdb.connect()
     con.execute("SET TimeZone = 'UTC'")
+    # DuckDB's default limit is 80% of RAM, which doesn't allow for the generator's own memory in the same process;
+    # cap it at half of what's free now and let big joins spill to disk instead of the kernel killing the run
+    avail = _mem_available_gb()
+    if avail:
+        con.execute(f"SET memory_limit = '{max(1.0, avail * 0.5):.1f}GB'")
+    (out / ".duckdb_tmp").mkdir(parents=True, exist_ok=True)
+    con.execute(f"SET temp_directory = '{out / '.duckdb_tmp'}'")
+    con.execute("SET preserve_insertion_order = false")
+    con.execute("SET enable_progress_bar = false")
     present = []
     for t in T:
         d = pq_dir / t.name
