@@ -1,0 +1,83 @@
+city,state,region_id,zip3,area_code,weight,store_metro
+New York,NY,NE,100,212,6.0,Y
+Brooklyn,NY,NE,112,718,4.0,Y
+Queens,NY,NE,113,718,3.0,Y
+Montclair,NJ,NE,070,973,1.2,Y
+Philadelphia,PA,NE,191,215,3.5,Y
+Boston,MA,NE,021,617,3.0,Y
+Cambridge,MA,NE,021,617,1.0,Y
+Providence,RI,NE,029,401,1.0,Y
+New Haven,CT,NE,065,203,0.8,Y
+Washington,DC,NE,200,202,2.5,Y
+Arlington,VA,NE,222,703,1.2,Y
+Atlanta,GA,SE,303,404,3.0,Y
+Decatur,GA,SE,300,404,0.8,Y
+Charlotte,NC,SE,282,704,1.8,Y
+Raleigh,NC,SE,276,919,1.3,Y
+Nashville,TN,SE,372,615,1.6,Y
+Charleston,SC,SE,294,843,0.8,Y
+Savannah,GA,SE,314,912,0.6,Y
+Orlando,FL,SE,328,407,1.8,Y
+Tampa,FL,SE,336,813,1.7,Y
+Miami,FL,SE,331,305,2.6,Y
+Houston,TX,CE,770,713,4.0,Y
+Dallas,TX,CE,752,214,3.0,Y
+Austin,TX,CE,787,512,2.2,Y
+San Antonio,TX,CE,782,210,1.8,Y
+New Orleans,LA,CE,701,504,1.0,Y
+Kansas City,MO,CE,641,816,1.3,Y
+Denver,CO,CE,802,303,2.0,Y
+Minneapolis,MN,CE,554,612,2.0,Y
+Los Angeles,CA,WE,900,213,6.0,Y
+Culver City,CA,WE,902,310,1.0,Y
+Pasadena,CA,WE,911,626,1.2,Y
+San Diego,CA,WE,921,619,2.4,Y
+Phoenix,AZ,WE,850,602,2.6,Y
+Portland,OR,WE,972,503,1.6,Y
+Salt Lake City,UT,WE,841,801,1.0,Y
+Sacramento,CA,WE,958,916,1.4,Y
+Pittsburgh,PA,NE,152,412,1.2,N
+Baltimore,MD,NE,212,410,1.4,N
+Hartford,CT,NE,061,860,0.7,N
+Albany,NY,NE,122,518,0.6,N
+Buffalo,NY,NE,142,716,0.7,N
+Burlington,VT,NE,054,802,0.3,N
+Portland,ME,NE,041,207,0.4,N
+Richmond,VA,NE,232,804,0.8,N
+Wilmington,DE,NE,198,302,0.4,N
+Birmingham,AL,SE,352,205,0.8,N
+Mobile,AL,SE,366,251,0.4,N
+Jacksonville,FL,SE,322,904,1.2,N
+Asheville,NC,SE,288,828,0.5,N
+Knoxville,TN,SE,379,865,0.6,N
+Memphis,TN,SE,381,901,0.9,N
+Louisville,KY,SE,402,502,0.9,N
+Columbia,SC,SE,292,803,0.6,N
+Jackson,MS,SE,392,601,0.4,N
+Chicago,IL,CE,606,312,5.0,N
+Milwaukee,WI,CE,532,414,1.2,N
+St. Louis,MO,CE,631,314,1.4,N
+Omaha,NE,CE,681,402,0.7,N
+Oklahoma City,OK,CE,731,405,0.9,N
+Tulsa,OK,CE,741,918,0.6,N
+Little Rock,AR,CE,722,501,0.5,N
+Baton Rouge,LA,CE,708,225,0.6,N
+Des Moines,IA,CE,503,515,0.6,N
+Indianapolis,IN,CE,462,317,1.3,N
+Columbus,OH,CE,432,614,1.4,N
+Cleveland,OH,CE,441,216,1.1,N
+Detroit,MI,CE,482,313,1.5,N
+Madison,WI,CE,537,608,0.5,N
+Albuquerque,NM,CE,871,505,0.7,N
+Seattle,WA,WE,981,206,2.6,N
+Spokane,WA,WE,992,509,0.5,N
+Boise,ID,WE,837,208,0.6,N
+Las Vegas,NV,WE,891,702,1.6,N
+Reno,NV,WE,895,775,0.5,N
+Tucson,AZ,WE,857,520,0.8,N
+San Francisco,CA,WE,941,415,2.4,N
+Oakland,CA,WE,946,510,1.2,N
+San Jose,CA,WE,951,408,1.6,N
+Fresno,CA,WE,937,559,0.8,N
+Honolulu,HI,WE,968,808,0.7,N
+Anchorage,AK,WE,995,907,0.3,N

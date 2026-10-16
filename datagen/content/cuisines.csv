@@ -1,0 +1,17 @@
+cuisine,account_share,business_types,tag_affinity,usual_skus_min,usual_skus_max,order_cadence_days_median,lines_per_order_mean,seasonality
+bbq_smokehouse,0.09,restaurant;food_truck;caterer,bbq:5;american:3;tex_mex:1;cajun:1,15,35,10,8,grilling
+mexican,0.12,restaurant;food_truck;commissary,mexican:5;tex_mex:3;latin:1,20,45,14,7,base
+tex_mex,0.06,restaurant;food_truck,tex_mex:5;mexican:3;bbq:1,15,35,14,7,chili_gameday
+indian,0.08,restaurant;caterer,indian:5;south_asian:1,30,60,14,10,diwali
+middle_eastern,0.06,restaurant;bakery;food_truck,middle_eastern:5;north_african:2;mediterranean:2;greek:1,20,45,14,8,base
+mediterranean_greek,0.05,restaurant;caterer,greek:4;mediterranean:4;middle_eastern:1;italian:1,15,35,14,7,grilling
+italian,0.11,restaurant;caterer,italian:5;mediterranean:2;american:1,15,40,14,7,base
+american_new,0.12,restaurant;hotel_kitchen;caterer,american:4;french:2;bbq:1;italian:1;baking:1,25,60,10,9,base
+cajun_creole,0.04,restaurant;caterer,cajun:5;american:2,15,30,14,7,soup_stew
+caribbean,0.03,restaurant;food_truck,caribbean:5;latin:2,12,30,14,6,grilling
+chinese,0.05,restaurant,chinese:5;southeast_asian:1,15,30,10,6,lunar_new_year
+southeast_asian,0.05,restaurant;food_truck,thai:4;vietnamese:4;southeast_asian:3,15,35,14,6,base
+japanese_korean,0.04,restaurant,japanese:4;korean:4,12,30,14,6,base
+bakery_cafe,0.06,bakery;cafe,baking:5;tea:2;french:1,15,40,10,8,baking
+caterer_events,0.03,caterer;commissary,american:3;italian:2;mexican:2;baking:2;mediterranean:2,40,90,21,14,holiday_gift
+peruvian_latin,0.01,restaurant,peruvian:5;latin:3,12,25,14,6,base

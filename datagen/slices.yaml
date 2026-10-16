@@ -1,0 +1,29 @@
+# Named slices of the Cymbal Foods dataset (DESIGN.md section 9.3).
+# A slice = groups (plus the groups they need) × an optional date window × an optional consumer cap.
+# Edit a slice here and re-run pipeline/10 with REGENERATE = False: the slices are re-cut from the existing Parquet.
+# Windows use the America/New_York date. Rows a kept row points at are always kept (closure).
+slices:
+  full:
+    description: Everything, three years. Demos, BigQuery and the archive.
+    groups: [reference, catalog, consumers, wholesale, orders, supply, inventory]
+    index_files: [indexes-baseline.sql, indexes-trace.sql, indexes-search.sql]
+  aldb002_search:
+    description: Module 2 notebook load (search, AI and the lot trace). Second half of 2026.
+    groups: [reference, catalog, consumers, wholesale, orders, supply]
+    window: [2026-07-01, 2026-12-31]
+    index_files: [indexes-baseline.sql, indexes-trace.sql, indexes-search.sql]
+  aldb003_agents:
+    description: Module 3 setup-VM load (agents, secure views, QueryData). Last quarter of 2026.
+    groups: [reference, catalog, consumers, wholesale, inventory, orders]
+    window: [2026-10-01, 2026-12-31]
+    index_files: [indexes-baseline.sql, indexes-search.sql]
+  aldb004_datacloud:
+    description: Module 4 setup-VM load (federation, Iceberg, forecasting). 2025–2026 in AlloyDB; BigQuery gets all three years and GA4.
+    groups: [reference, catalog, consumers, wholesale, inventory, orders]
+    window: [2025-01-01, 2026-12-31]
+    index_files: [indexes-baseline.sql]
+  aldb005_ops:
+    description: Module 5 setup-VM load (Holiday Rush operations under load). 2025–2026 with supply.
+    groups: [reference, catalog, consumers, wholesale, inventory, supply, orders]
+    window: [2025-01-01, 2026-12-31]
+    index_files: [indexes-baseline.sql, indexes-trace.sql]

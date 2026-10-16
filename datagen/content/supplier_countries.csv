@@ -1,0 +1,26 @@
+country,iso2,suppliers,supplier_kinds,freight,lead_time_days_mean,lead_time_days_sd,notes
+United States,US,16,grower;processor;importer,truck,10,4,domestic garlic onion chiles salt honey and US importers of record
+India,IN,14,grower_exporter;processor,sea,55,12,
+China,CN,8,grower_exporter;processor,sea,45,10,
+Mexico,MX,9,grower_exporter;co_packer,truck,14,5,
+Spain,ES,9,grower_exporter;processor,sea,30,8,smoked paprika saffron olive oil sherry vinegar
+Italy,IT,8,processor;co_packer,sea,30,8,olive oil balsamic capers
+Turkey,TR,8,grower_exporter,sea,35,8,oregano bay sumac chiles
+Vietnam,VN,8,grower_exporter,sea,45,10,Saigon cinnamon star anise black pepper
+Indonesia,ID,7,grower_exporter,sea,50,12,Korintje cinnamon nutmeg cloves white pepper
+Egypt,EG,6,grower_exporter,sea,35,8,herbs anise fennel
+Sri Lanka,LK,5,grower_exporter,sea,50,10,Ceylon cinnamon tea
+Madagascar,MG,5,grower_exporter,sea,60,15,vanilla cloves
+Greece,GR,5,grower_exporter;processor,sea,30,8,oregano saffron mastic olive oil honey
+France,FR,5,processor;trading_house,sea,25,6,salts herbs tarragon mustard
+Japan,JP,5,processor;co_packer,sea,35,8,tea sesame oil soy wasabi
+Guatemala,GT,4,grower_exporter,sea,25,6,cardamom coffee
+Morocco,MA,4,grower_exporter,sea,30,8,coriander rosemary mint
+Peru,PE,4,grower_exporter,sea,30,8,aji chiles annatto paprika
+Brazil,BR,4,grower_exporter,sea,35,8,black pepper pink peppercorns sugar coffee
+Hungary,HU,3,processor,sea,30,8,paprika
+Jamaica,JM,2,grower_exporter,sea,14,5,allspice scotch bonnet
+Grenada,GD,2,grower_exporter,sea,18,5,nutmeg mace
+South Korea,KR,2,processor;co_packer,sea,30,8,gochugaru gochujang
+Netherlands,NL,4,trading_house,sea,30,8,European trading houses: caraway cubeb grains of paradise and other small-volume origins
+Singapore,SG,3,trading_house,sea,40,10,Asian trading houses: long pepper timut black lime galangal and other small-volume origins

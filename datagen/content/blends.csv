@@ -1,0 +1,144 @@
+slug,name,style,ambiguity_group,components,heat,salt_free,flavor_notes,cuisine_tags,seasonality,variants,popularity
+smokehouse_brisket_rub,Smokehouse Brisket Rub,rub,,kosher_salt:28;black_pepper:26;smoked_paprika_sweet:18;garlic:10;onion:8;brown_sugar:6;ancho:4,1,N,smoky;peppery;savory,bbq;american,grilling,salt_free;hot,5
+texas_salt_pepper_rub,Texas Salt and Pepper Rub,rub,,kosher_salt:50;black_pepper:50,1,N,coarse;peppery;clean,bbq;american,grilling,,5
+central_texas_beef_rub,Central Texas Beef Rub,rub,,kosher_salt:40;black_pepper:40;garlic:12;cayenne:3;onion:5,2,N,peppery;garlicky,bbq;american,grilling,,3
+kansas_city_sweet_rub,Kansas City Sweet Rub,rub,,brown_sugar:38;paprika_hungarian_sweet:18;kosher_salt:16;black_pepper:8;garlic:7;onion:7;chipotle_morita:3;celery_seed:3,1,N,sweet;smoky;tangy,bbq;american,grilling,salt_free,4
+memphis_dry_rub,Memphis Dry Rub,rub,,paprika_hungarian_sweet:26;brown_sugar:20;kosher_salt:16;garlic:10;onion:8;black_pepper:8;mustard_yellow:4;cayenne:3;celery_seed:3;oregano_mediterranean:2,2,N,sweet;savory;mustardy,bbq;american,grilling,,4
+carolina_pork_rub,Carolina Pork Rub,rub,,brown_sugar:30;kosher_salt:20;paprika_hungarian_sweet:18;black_pepper:12;mustard_yellow:8;cayenne:6;garlic:6,2,N,sweet;tangy;peppery,bbq;american,grilling,,3
+competition_rib_rub,Competition Rib Rub,rub,,cane_sugar:30;kosher_salt:18;smoked_paprika_sweet:16;garlic:10;onion:8;chipotle_morita:6;black_pepper:6;cumin:3;celery_seed:3,2,N,sweet;smoky;balanced,bbq;american,grilling,,4
+coffee_chile_rub,Coffee and Chile Rub,rub,,espresso_powder:28;ancho:18;brown_sugar:16;kosher_salt:14;smoked_paprika_sweet:10;black_pepper:6;cumin:4;garlic:4,2,N,roasty;earthy;smoky,bbq;american,grilling,salt_free,3
+pork_shoulder_rub,Pork Shoulder Rub,rub,,brown_sugar:28;paprika_spanish_sweet:20;kosher_salt:18;black_pepper:10;garlic:8;onion:6;cumin:5;cayenne:3;thyme:2,1,N,sweet;savory,bbq;american,grilling,,3
+poultry_rub,Grilled Poultry Rub,rub,,kosher_salt:24;paprika_hungarian_sweet:20;garlic:14;onion:10;thyme:8;black_pepper:8;lemon_peel:8;rosemary:4;cayenne:4,1,N,herbal;lemony;savory,bbq;american,grilling,salt_free,4
+steak_seasoning,Peppercorn Steak Seasoning,rub,,kosher_salt:34;black_pepper:26;garlic:12;coriander:8;crushed_red_pepper:6;dill_seed:6;onion:8,2,N,coarse;peppery;garlicky,american;bbq,grilling,salt_free,5
+burger_seasoning,Backyard Burger Seasoning,seasoning,,kosher_salt:30;black_pepper:18;garlic:14;onion:14;paprika_hungarian_sweet:12;mustard_yellow:6;brown_sugar:6,1,N,savory;beefy,american;bbq,grilling,,4
+prime_rib_rub,Holiday Prime Rib Rub,rub,,kosher_salt:30;black_pepper_tellicherry:22;rosemary:14;garlic:14;thyme:8;onion:6;mustard_brown:6,1,N,herbal;peppery;festive,american;french,holiday_gift,,3
+pastrami_rub,Pastrami Rub,rub,,black_pepper:38;coriander:34;mustard_yellow:8;garlic:8;brown_sugar:6;paprika_hungarian_sweet:6,1,Y,peppery;citrus;coriander,american;eastern_european,base,,2
+corned_beef_spice,Corned Beef Spice,whole_spice,,mustard_yellow:22;coriander:22;allspice:12;bay_turkish:10;cloves:8;black_pepper:10;dill_seed:8;crushed_red_pepper:5;ginger:3,1,Y,pickled;warm;aromatic,american;eastern_european,base,,2
+montreal_style_steak,Montreal-Style Steak Spice,rub,,kosher_salt:28;black_pepper:24;coriander:12;dill_seed:12;garlic:10;crushed_red_pepper:8;onion:6,2,N,coarse;garlicky;dill,american,grilling,salt_free,4
+chicago_style_steak,Steakhouse Char Seasoning,rub,,kosher_salt:34;black_pepper:24;smoked_paprika_sweet:14;garlic:12;onion:10;espresso_powder:6,1,N,charred;peppery,american,grilling,,2
+chesapeake_seafood,Chesapeake-Style Seafood Seasoning,seasoning,,celery_seed:22;kosher_salt:24;paprika_hungarian_sweet:14;mustard_yellow:10;black_pepper:8;crushed_red_pepper:6;bay_turkish:5;cloves:3;allspice:3;ginger:3;cardamom_green:2,2,N,celery;briny;warm,american;cajun,grilling,salt_free,5
+gulf_shrimp_boil,Gulf Shrimp Boil,whole_spice,,mustard_yellow:24;coriander:20;crushed_red_pepper:14;dill_seed:10;bay_turkish:10;allspice:10;cloves:6;black_pepper:6,3,Y,peppery;herbal;hot,cajun;american,grilling,,3
+crawfish_boil,Crawfish Boil Seasoning,seasoning,,kosher_salt:40;cayenne:16;paprika_hungarian_sweet:10;garlic:8;onion:8;mustard_yellow:6;black_pepper:6;bay_turkish:3;thyme:3,4,N,salty;hot;garlicky,cajun,grilling,,3
+cajun_seasoning,Cajun Seasoning,seasoning,,paprika_hungarian_sweet:24;kosher_salt:20;garlic:14;onion:10;cayenne:10;black_pepper:8;white_pepper:6;oregano_mediterranean:4;thyme:4,3,N,bold;peppery;herbal,cajun;american,base,salt_free;hot,5
+creole_seasoning,Creole Seasoning,seasoning,,paprika_hungarian_sweet:28;kosher_salt:18;garlic:14;onion:12;oregano_mediterranean:8;basil:6;thyme:6;black_pepper:4;cayenne:4,2,N,herbal;paprika;rounded,cajun;american,base,salt_free,4
+blackening_spice,Blackening Spice,seasoning,,paprika_hungarian_sweet:30;cayenne:12;garlic:12;onion:10;thyme:10;oregano_mediterranean:8;black_pepper:8;white_pepper:6;kosher_salt:4,3,N,charred;hot;herbal,cajun,grilling,salt_free,4
+gumbo_seasoning,Gumbo Seasoning,seasoning,,paprika_hungarian_sweet:22;onion:16;garlic:14;thyme:12;bay_turkish:6;cayenne:8;black_pepper:8;white_pepper:6;celery_seed:8,2,Y,earthy;herbal,cajun,soup_stew,,3
+jambalaya_seasoning,Jambalaya Seasoning,seasoning,,paprika_spanish_sweet:22;kosher_salt:18;garlic:14;onion:14;thyme:8;oregano_mediterranean:6;cayenne:8;black_pepper:6;celery_seed:4,3,N,savory;smoky-hot,cajun,soup_stew,,2
+chili_powder_classic,Chili Powder (Classic Blend),seasoning,chile_powder,ancho:46;cumin:20;garlic:12;oregano_mexican:10;paprika_spanish_sweet:8;cayenne:4,2,Y,earthy;warm;mild,tex_mex;american,chili_gameday,hot;organic,5
+chili_powder_dark,Dark Chili Powder,seasoning,chile_powder,ancho:34;pasilla:18;cumin:18;chipotle_morita:8;garlic:10;oregano_mexican:8;cocoa_powder:4,2,Y,deep;smoky;bittersweet,tex_mex,chili_gameday,,3
+chili_con_carne,Chili con Carne Seasoning,seasoning,chile_powder,ancho:30;new_mexico_red:16;cumin:18;kosher_salt:12;garlic:10;onion:6;oregano_mexican:6;cayenne:2,2,N,classic chili;cumin,tex_mex;american,chili_gameday,salt_free,4
+cincinnati_chili_spice,Cincinnati-Style Chili Spice,seasoning,chile_powder,new_mexico_red:30;cinnamon_cassia:14;cumin:14;allspice:8;cloves:4;cocoa_powder:10;black_pepper:6;paprika_hungarian_sweet:8;bay_turkish:2;cayenne:4,2,Y,cinnamon;cocoa;warm,american,chili_gameday,,2
+texas_red_chili,Texas Red Chili Grind,seasoning,chile_powder,ancho:32;guajillo:24;chile_de_arbol:6;cumin:20;garlic:10;oregano_mexican:8,3,Y,coarse;hot;meaty,tex_mex,chili_gameday,,3
+taco_seasoning,Taco Seasoning,seasoning,,new_mexico_red:30;cumin:18;kosher_salt:16;garlic:10;onion:10;oregano_mexican:8;paprika_spanish_sweet:6;cayenne:2,2,N,warm;savory;familiar,tex_mex;mexican,base,salt_free;hot,5
+fajita_seasoning,Fajita Seasoning,seasoning,,kosher_salt:22;new_mexico_red:20;cumin:14;garlic:12;onion:10;lime_powder:10;oregano_mexican:6;black_pepper:6,2,N,lime;cumin;grilled,tex_mex,grilling,salt_free,4
+al_pastor_blend,Al Pastor Spice,seasoning,,guajillo:34;ancho:16;annatto:14;cumin:8;oregano_mexican:8;garlic:8;cloves:2;cinnamon_ceylon:4;black_pepper:6,2,Y,red chile;achiote;warm,mexican,base,,3
+barbacoa_spice,Barbacoa Spice,seasoning,,guajillo:28;ancho:22;cumin:12;oregano_mexican:10;garlic:10;cloves:4;bay_turkish:4;black_pepper:6;allspice:4,2,Y,rich;clove;chile,mexican,base,,2
+mole_spice,Mole Spice Blend,seasoning,,ancho:24;pasilla:20;mulato:16;cocoa_powder:12;sesame_white:8;cinnamon_ceylon:6;anise_seed:4;cloves:3;black_pepper:3;cumin:4,1,Y,chocolate;dried fruit;warm,mexican,holiday_gift,,3
+adobo_seasoning,Adobo Seasoning,seasoning,,kosher_salt:40;garlic:22;onion:12;oregano_mexican:10;black_pepper:8;turmeric:4;cumin:4,0,N,garlicky;salty;all-purpose,latin;caribbean,base,salt_free,5
+sazon_blend,Sazon Seasoning,seasoning,,kosher_salt:34;annatto:20;garlic:14;cumin:12;coriander:10;oregano_mexican:6;black_pepper:4,0,N,golden;savory,latin;caribbean,base,salt_free,4
+chile_lime_seasoning,Chile-Lime Seasoning,seasoning,,new_mexico_red:30;kosher_salt:30;lime_powder:28;chile_de_arbol:6;cane_sugar:6,2,N,tart;salty;bright,mexican,summer_iced,salt_free,4
+elote_spice,Street Corn Spice,seasoning,,ancho:30;kosher_salt:24;lime_powder:18;garlic:12;smoked_paprika_sweet:10;cayenne:6,2,N,smoky;tart,mexican,grilling,,3
+southwest_seasoning,Southwest Seasoning,seasoning,,new_mexico_red:24;cumin:18;kosher_salt:16;garlic:12;onion:10;coriander:8;oregano_mexican:6;chipotle_morita:6,2,N,earthy;smoky,tex_mex;american,base,salt_free,3
+jerk_seasoning,Jamaican-Style Jerk Seasoning,seasoning,,allspice:24;kosher_salt:16;brown_sugar:14;thyme:12;scotch_bonnet:8;garlic:8;onion:8;black_pepper:6;cinnamon_cassia:2;nutmeg:2,4,N,allspice;thyme;fiery,caribbean,grilling,salt_free;mild,4
+caribbean_curry,Caribbean Curry Powder,curry,curry,turmeric:30;coriander:20;cumin:14;allspice:8;fenugreek:8;mustard_yellow:6;ginger:6;black_pepper:4;scotch_bonnet:4,2,Y,allspice;turmeric;warm,caribbean,base,,3
+peruvian_aji_blend,Peruvian Aji Blend,seasoning,,aji_amarillo:30;aji_panca:20;cumin:16;garlic:16;oregano_mexican:10;kosher_salt:8,3,N,fruity heat;cumin,peruvian;latin,base,,2
+chimichurri_dry,Chimichurri Herb Blend,herb_blend,,parsley:34;oregano_mediterranean:22;garlic:14;crushed_red_pepper:10;black_pepper:6;kosher_salt:8;onion:6,2,N,herbal;garlicky;bright,latin,grilling,salt_free,4
+cuban_mojo,Cuban Mojo Seasoning,seasoning,,garlic:24;orange_peel:20;lime_powder:16;cumin:14;oregano_mexican:12;kosher_salt:10;black_pepper:4,0,N,citrus;garlic,caribbean;latin,grilling,,2
+italian_seasoning,Italian Seasoning,herb_blend,,oregano_mediterranean:30;basil:30;thyme:14;rosemary:10;marjoram:10;sage:6,0,Y,classic;herbal,italian;american,base,organic,5
+pizza_seasoning,Pizza Seasoning,herb_blend,,oregano_mediterranean:30;basil:20;garlic:18;crushed_red_pepper:10;fennel_seed:8;onion:8;thyme:6,2,Y,oregano;fennel;garlic,italian;american,base,,4
+tuscan_herb,Tuscan Herb Blend,herb_blend,,rosemary:24;sage:16;garlic:16;thyme:14;oregano_mediterranean:10;basil:10;black_pepper:6;crushed_red_pepper:4,1,Y,rustic;woody,italian,base,,3
+porchetta_rub,Porchetta Rub,rub,,fennel_seed:28;kosher_salt:24;rosemary:14;garlic:14;black_pepper:10;crushed_red_pepper:6;sage:4,2,N,fennel;rosemary;rich,italian,holiday_gift,,2
+pasta_sauce_herbs,Pasta Sauce Herbs,herb_blend,,basil:34;oregano_mediterranean:24;parsley:14;garlic:10;onion:8;thyme:6;bay_turkish:4,0,Y,sweet basil;savory,italian,base,,3
+garlic_bread_blend,Garlic Bread Blend,seasoning,,garlic:44;parsley:22;kosher_salt:16;oregano_mediterranean:8;onion:6;black_pepper:4,0,N,garlicky;herbal,italian;american,base,,3
+gremolata_blend,Gremolata Blend,herb_blend,,parsley:44;lemon_peel:30;garlic:20;black_pepper:6,0,Y,lemon;parsley;fresh,italian,base,,2
+herbes_de_provence,Herbes de Provence,herb_blend,,thyme:28;savory:16;rosemary:16;marjoram:14;oregano_mediterranean:10;lavender:8;basil:8,0,Y,floral;herbal;sunny,french,base,organic,4
+fines_herbes,Fines Herbes,herb_blend,,parsley:30;chives:26;tarragon:24;chervil:20,0,Y,delicate;green,french,base,,2
+bouquet_garni,Bouquet Garni,herb_blend,,thyme:34;parsley:28;bay_turkish:20;rosemary:10;black_pepper:8,0,Y,herbal;stock-friendly,french,soup_stew,,2
+quatre_epices,Quatre Epices,baking_spice,,white_pepper:50;nutmeg:20;cloves:15;ginger:15,1,Y,peppery;warm,french,holiday_gift,,1
+greek_seasoning,Greek Seasoning,seasoning,,oregano_greek:30;kosher_salt:20;garlic:16;lemon_peel:12;black_pepper:8;onion:6;thyme:4;marjoram:4,0,N,oregano;lemon;bright,greek;mediterranean,grilling,salt_free,4
+souvlaki_blend,Souvlaki Seasoning,seasoning,,oregano_greek:30;garlic:20;lemon_peel:16;kosher_salt:16;black_pepper:8;thyme:6;paprika_hungarian_sweet:4,0,N,lemony;garlicky,greek,grilling,,2
+lemon_herb,Lemon Herb Seasoning,seasoning,,lemon_peel:30;parsley:16;garlic:14;onion:10;thyme:10;kosher_salt:12;black_pepper:8,0,N,bright;herbal,american;mediterranean,base,salt_free,4
+lemon_pepper,Lemon Pepper,seasoning,,black_pepper:40;lemon_peel:30;kosher_salt:20;garlic:6;onion:4,1,N,zesty;peppery,american,base,salt_free,5
+garlic_pepper,Garlic Pepper,seasoning,,garlic:44;black_pepper:40;kosher_salt:10;onion:6,1,N,garlicky;peppery,american,base,salt_free,4
+seasoned_salt,Seasoned Salt,seasoning,,kosher_salt:60;paprika_hungarian_sweet:12;garlic:8;onion:8;turmeric:4;cane_sugar:4;celery_seed:4,0,N,savory;salty,american,base,,5
+celery_salt,Celery Salt,salt_blend,,kosher_salt:75;celery_seed:25,0,N,celery;salty,american,base,,3
+garlic_salt,Garlic Salt,salt_blend,garlic,sea_salt:70;garlic:28;parsley:2,0,N,garlicky;salty,american,base,,4
+onion_salt,Onion Salt,salt_blend,,sea_salt:70;onion:30,0,N,oniony;salty,american,base,,2
+smoked_salt_blend,Smoky Grill Salt,salt_blend,,smoked_sea_salt:60;black_pepper:15;smoked_paprika_sweet:15;garlic:10,0,N,smoky;salty,bbq;american,grilling,,2
+everything_bagel,Everything Seasoning,seasoning,,sesame_white:28;poppy_blue:20;onion_toasted:18;garlic:14;flake_sea_salt:12;sesame_black:8,0,N,toasty;savory;crunchy,american,base,salt_free,5
+sesame_seasoning,Toasted Sesame Seasoning,seasoning,sesame,sesame_white:50;sesame_black:20;kosher_salt:16;garlic:8;crushed_red_pepper:6,1,N,nutty;savory,japanese;korean,base,,2
+furikake_blend,Furikake,seasoning,,sesame_white:44;nori_flakes:22;sesame_black:14;cane_sugar:10;sea_salt:10,0,N,nutty;oceanic;sweet-salty,japanese,base,,3
+shichimi_togarashi,Shichimi Togarashi,seasoning,,chile_de_arbol:30;orange_peel:16;sesame_black:14;sesame_white:10;sichuan_pepper_red:10;ginger:8;nori_flakes:8;poppy_blue:4,3,Y,citrus;numbing;hot,japanese,base,,3
+japanese_curry_powder,Japanese Curry Powder,curry,curry,turmeric:24;coriander:20;cumin:14;fenugreek:8;cinnamon_cassia:8;black_pepper:6;ginger:6;cardamom_green:4;cloves:4;bay_turkish:2;fennel_seed:4,1,Y,mellow;sweet;warm,japanese,soup_stew,,2
+chinese_five_spice,Chinese Five Spice,baking_spice,,star_anise:30;cinnamon_cassia:26;fennel_seed:20;cloves:12;sichuan_pepper_red:12,0,Y,licorice;warm;numbing,chinese,lunar_new_year,organic,4
+char_siu_rub,Char Siu-Style Rub,rub,,cane_sugar:40;star_anise:8;cinnamon_cassia:8;kosher_salt:14;garlic:10;ginger:8;white_pepper:6;fennel_seed:6,0,N,sweet;anise;glazed,chinese,lunar_new_year,,2
+sichuan_mala,Sichuan Mala Spice,seasoning,,sichuan_erjingtiao:34;sichuan_pepper_red:26;kosher_salt:12;cumin:10;sesame_white:8;star_anise:4;fennel_seed:6,4,N,numbing;hot;cumin,chinese,lunar_new_year,,3
+pho_spice,Pho Spice,whole_spice,,star_anise:30;cinnamon_saigon:22;coriander:16;cardamom_black:12;cloves:10;fennel_seed:10,0,Y,anise;warm;broth,vietnamese,soup_stew,,3
+lemongrass_ginger,Lemongrass Ginger Seasoning,seasoning,,lemongrass:30;ginger:20;garlic:16;kosher_salt:14;galangal:8;thai_bird:4;cane_sugar:8,2,N,citrus;ginger;bright,thai;vietnamese,base,,2
+thai_red_curry_powder,Thai Red Curry Powder,curry,curry,new_mexico_red:22;thai_bird:8;lemongrass:16;galangal:12;coriander:12;garlic:10;cumin:8;makrut_lime_leaves:6;white_pepper:6,3,Y,lemongrass;red chile,thai,base,,3
+thai_green_curry_powder,Thai Green Curry Powder,curry,curry,new_mexico_green:20;jalapeno:10;lemongrass:20;cilantro:12;galangal:10;coriander:10;makrut_lime_leaves:8;cumin:6;white_pepper:4,3,Y,green;herbal;bright,thai,base,,2
+korean_bbq_rub,Korean BBQ Rub,rub,,gochugaru:30;cane_sugar:22;garlic:16;kosher_salt:12;sesame_white:8;ginger:6;black_pepper:6,2,N,sweet;smoky;garlicky,korean,grilling,,3
+garam_masala,Garam Masala,masala,,coriander:24;cumin:20;cardamom_green:12;black_pepper:12;cinnamon_cassia:10;cloves:6;nutmeg:4;bay_turkish:4;cardamom_black:4;mace:4,1,Y,warm;aromatic;sweet,indian,diwali,organic,5
+kashmiri_garam_masala,Kashmiri Garam Masala,masala,,fennel_seed:22;ginger:18;cardamom_black:14;cinnamon_cassia:12;cloves:10;cardamom_green:10;black_pepper:8;mace:6,1,Y,fennel;ginger;smoky,indian,diwali,,2
+chaat_masala,Chaat Masala,masala,,amchur:24;cumin:22;kala_namak:18;coriander:10;black_pepper:8;ajwain:6;kashmiri_chile:6;ginger:6,1,N,tangy;sulfurous;bright,indian,summer_iced,,3
+tandoori_masala,Tandoori Masala,masala,,kashmiri_chile:30;coriander:16;cumin:14;garlic:10;ginger:10;cardamom_green:6;fenugreek:6;kosher_salt:8,2,N,vivid;smoky;warm,indian,grilling,salt_free,4
+tikka_masala_spice,Tikka Masala Spice,masala,,paprika_hungarian_sweet:26;coriander:18;cumin:16;kashmiri_chile:10;garlic:8;ginger:8;cardamom_green:6;kasuri_methi:4;cinnamon_cassia:4,1,Y,rich;rounded,indian,base,,4
+makhani_spice,Makhani Spice,masala,,kashmiri_chile:30;kasuri_methi:14;coriander:14;cumin:12;garlic:10;ginger:8;cardamom_green:6;cinnamon_cassia:6,1,Y,mellow;fenugreek,indian,base,,3
+madras_curry,Madras Curry Powder,curry,curry,turmeric:24;coriander:22;cumin:14;fenugreek:8;cayenne:10;mustard_brown:6;black_pepper:6;ginger:6;curry_leaves:4,3,Y,hot;earthy;golden,indian,base,mild;organic,5
+mild_curry,Mild Curry Powder,curry,curry,turmeric:30;coriander:26;cumin:16;fenugreek:8;ginger:8;cinnamon_cassia:6;cardamom_green:4;black_pepper:2,0,Y,golden;gentle,indian;american,base,,4
+vindaloo_spice,Vindaloo Spice,masala,,kashmiri_chile:28;guntur_sannam:10;cumin:14;black_pepper:10;mustard_brown:8;cinnamon_cassia:8;cloves:6;fenugreek:6;garlic:10,4,Y,hot;tangy;clove,indian,base,,2
+biryani_masala,Biryani Masala,masala,,coriander:18;cumin:14;cardamom_green:12;cinnamon_cassia:10;cardamom_black:8;cloves:8;mace:6;star_anise:6;bay_turkish:6;rose_petals:6;black_pepper:6,1,Y,floral;fragrant,indian,diwali,,3
+chana_masala,Chana Masala,masala,,coriander:22;amchur:14;cumin:14;kashmiri_chile:12;anardana:10;black_pepper:8;ginger:8;cloves:4;kasuri_methi:8,2,Y,tangy;earthy,indian,base,,2
+sambar_powder,Sambar Powder,masala,,coriander:30;byadgi:20;fenugreek:10;cumin:10;black_pepper:8;mustard_black:6;curry_leaves:8;asafoetida:2;turmeric:6,2,Y,tangy;toasty,indian,soup_stew,,2
+rasam_powder,Rasam Powder,masala,,coriander:30;black_pepper:24;cumin:20;byadgi:14;curry_leaves:8;asafoetida:4,2,Y,peppery;cumin,indian,soup_stew,,1
+panch_phoron,Panch Phoron,whole_spice,,cumin:20;fennel_seed:20;nigella:20;mustard_black:20;fenugreek:20,0,Y,whole seeds;nutty;bitter,indian,base,,2
+chai_masala,Chai Masala,baking_spice,,ginger:30;cardamom_green:26;cinnamon_cassia:20;cloves:10;black_pepper:10;nutmeg:4,1,Y,warming;ginger;cardamom,indian;tea,hot_tea,,4
+vadouvan,Vadouvan,curry,curry,shallot:30;onion_toasted:14;cumin:12;mustard_brown:10;fenugreek:8;curry_leaves:8;turmeric:8;cardamom_green:4;nutmeg:4;garlic:2,0,Y,caramelized;savory,french;indian,holiday_gift,,1
+pav_bhaji_masala,Pav Bhaji Masala,masala,,kashmiri_chile:22;coriander:20;amchur:12;cumin:12;fennel_seed:10;black_pepper:8;cloves:6;cinnamon_cassia:6;cardamom_black:4,2,Y,tangy;warm,indian,base,,1
+ras_el_hanout,Ras el Hanout,masala,,coriander:16;cumin:14;ginger:12;turmeric:10;cinnamon_ceylon:10;paprika_hungarian_sweet:10;black_pepper:6;cardamom_green:6;allspice:4;nutmeg:4;rose_petals:4;cloves:4,1,Y,floral;warm;complex,north_african,holiday_gift,,4
+harissa_spice,Harissa Spice,seasoning,,guajillo:30;chile_de_arbol:10;smoked_paprika_hot:10;caraway:14;coriander:14;cumin:10;garlic:12,3,Y,smoky;caraway;hot,north_african,base,,3
+chermoula_spice,Chermoula Spice,seasoning,,cilantro:24;parsley:20;cumin:16;paprika_hungarian_sweet:14;garlic:12;lemon_peel:10;cayenne:4,1,Y,herbal;lemony,north_african,grilling,,2
+berbere,Berbere,seasoning,,new_mexico_red:30;african_birds_eye:8;paprika_hungarian_sweet:12;fenugreek:10;ginger:8;coriander:8;cardamom_black:6;allspice:4;cloves:4;black_pepper:6;cinnamon_cassia:4,4,Y,deep red;hot;fragrant,african,soup_stew,,3
+mitmita,Mitmita,seasoning,,african_birds_eye:56;cardamom_black:16;kosher_salt:20;cloves:8,5,N,searing;cardamom,african,base,,1
+dukkah_sesame,Sesame Dukkah,seasoning,sesame,sesame_white:40;coriander:24;cumin:16;black_pepper:8;flake_sea_salt:8;fennel_seed:4,0,N,nutty;crunchy,north_african;middle_eastern,base,,2
+zaatar,Za'atar,herb_blend,,oregano_mediterranean:34;thyme:20;sumac:22;sesame_white:18;sea_salt:6,0,N,tart;herbal;nutty,middle_eastern,base,organic,5
+baharat,Baharat,masala,,black_pepper:22;paprika_hungarian_sweet:18;cumin:16;coriander:14;cinnamon_cassia:10;cloves:6;cardamom_green:6;nutmeg:4;allspice:4,1,Y,warm;peppery,middle_eastern,base,,3
+shawarma_spice,Shawarma Spice,seasoning,,cumin:20;paprika_hungarian_sweet:18;coriander:14;garlic:12;turmeric:8;cinnamon_cassia:6;allspice:6;black_pepper:8;cardamom_green:4;cloves:4,1,Y,warm;savory,middle_eastern,grilling,,4
+kofta_spice,Kofta Spice,seasoning,,cumin:24;coriander:20;paprika_hungarian_sweet:16;allspice:10;cinnamon_cassia:8;black_pepper:10;aleppo_style:8;spearmint:4,1,Y,warm;minty,middle_eastern,grilling,,2
+falafel_spice,Falafel Spice,seasoning,,cumin:30;coriander:30;garlic:14;cayenne:6;black_pepper:8;parsley:12,1,Y,cumin;herbal,middle_eastern,base,,2
+hawaij_soup,Hawaij for Soup,masala,,black_pepper:30;cumin:30;turmeric:20;cardamom_green:12;cloves:8,1,Y,peppery;golden,middle_eastern,soup_stew,,1
+hawaij_coffee,Hawaij for Coffee,baking_spice,,ginger:40;cardamom_green:30;cinnamon_cassia:15;cloves:15,0,Y,ginger;cardamom,middle_eastern,hot_tea,,1
+advieh,Advieh,masala,,rose_petals:30;cinnamon_ceylon:24;cardamom_green:22;cumin:12;ginger:12,0,Y,floral;sweet,middle_eastern,base,,1
+aleppo_lemon_blend,Aleppo Lemon Finishing Spice,seasoning,,aleppo_style:44;lemon_peel:24;flake_sea_salt:20;sumac:12,1,N,bright;fruity,mediterranean,base,,2
+hungarian_goulash,Hungarian Goulash Spice,seasoning,,paprika_hungarian_sweet:46;paprika_hungarian_hot:10;caraway:12;onion:12;garlic:8;marjoram:6;black_pepper:6,1,Y,paprika;caraway,eastern_european,soup_stew,,2
+nordic_dill,Nordic Dill Blend,herb_blend,dill,dill_weed:44;lemon_peel:16;sea_salt:16;white_pepper:10;onion:8;chives:6,0,N,fresh dill;lemon,scandinavian,base,salt_free,2
+salmon_rub,Cedar-Plank Salmon Rub,rub,,brown_sugar:30;kosher_salt:20;dill_weed:14;smoked_paprika_sweet:12;black_pepper:10;lemon_peel:8;garlic:6,1,N,sweet;smoky;dill,american,grilling,,3
+fish_taco_spice,Fish Taco Spice,seasoning,,new_mexico_red:22;cumin:16;lime_powder:16;kosher_salt:16;garlic:10;oregano_mexican:8;coriander:6;chipotle_morita:6,2,N,lime;smoky,tex_mex,grilling,,2
+pickling_spice,Pickling Spice,whole_spice,,mustard_yellow:22;coriander:20;dill_seed:14;bay_turkish:10;allspice:10;crushed_red_pepper:6;cloves:6;black_pepper:6;ginger:6,1,Y,tangy;warm;whole,pickling;american,pickling,,4
+mulling_spice,Mulling Spice,whole_spice,,cinnamon_cassia:40;orange_peel:20;allspice:16;cloves:12;star_anise:8;ginger:4,0,Y,cider;orange;warm,american;european,holiday_gift,,4
+pumpkin_pie_spice,Pumpkin Pie Spice,baking_spice,,cinnamon_korintje:52;ginger:20;nutmeg:12;allspice:8;cloves:8,0,Y,classic fall;warm,baking;american,pumpkin,organic,5
+apple_pie_spice,Apple Pie Spice,baking_spice,,cinnamon_korintje:64;nutmeg:14;allspice:10;cardamom_green:6;ginger:6,0,Y,cinnamon-forward,baking;american,baking,,4
+gingerbread_spice,Gingerbread Spice,baking_spice,,ginger:40;cinnamon_saigon:30;cloves:12;nutmeg:10;allspice:8,0,Y,ginger;spicy-sweet,baking,holiday_gift,,4
+speculaas_spice,Speculaas Spice,baking_spice,,cinnamon_saigon:56;nutmeg:12;cloves:10;ginger:8;cardamom_green:6;white_pepper:4;anise_seed:4,0,Y,cookie spice;warm,baking;european,holiday_gift,,2
+holiday_cookie_spice,Holiday Cookie Spice,baking_spice,,cinnamon_saigon:44;cardamom_green:16;ginger:16;nutmeg:12;cloves:6;orange_peel:6,0,Y,festive;cardamom,baking,holiday_gift,,3
+cinnamon_sugar,Cinnamon Sugar,baking_spice,cinnamon,cane_sugar:84;cinnamon_saigon:16,0,Y,sweet;cinnamon,baking;american,baking,,5
+vanilla_sugar,Vanilla Bean Sugar,baking_spice,vanilla,cane_sugar:96;vanilla_madagascar:4,0,Y,vanilla;sweet,baking,holiday_gift,,3
+cocoa_spice,Mexican Cocoa Spice,baking_spice,,cocoa_powder:50;cane_sugar:30;cinnamon_ceylon:12;ancho:4;cayenne:2;vanilla_madagascar:2,1,Y,chocolate;cinnamon;warm,mexican;baking,holiday_gift,,3
+winter_warmer,Winter Warmer Spice,baking_spice,,cinnamon_saigon:40;ginger:20;cloves:12;orange_peel:12;star_anise:8;cardamom_green:8,0,Y,cozy;citrus,baking;tea,holiday_gift,,2
+maple_bourbon_rub,Maple Smoke Rub,rub,,maple_sugar:34;kosher_salt:20;smoked_paprika_sweet:16;black_pepper:12;garlic:8;onion:6;cinnamon_cassia:4,1,N,maple;smoky,bbq;american,pumpkin,,3
+poultry_seasoning,Poultry Seasoning,herb_blend,,sage:40;thyme:24;marjoram:14;rosemary:10;black_pepper:6;nutmeg:6,0,Y,sage;thanksgiving,american,thanksgiving,organic,5
+stuffing_herbs,Stuffing Herb Blend,herb_blend,,sage:30;thyme:20;parsley:16;onion:14;celery_seed:10;marjoram:6;black_pepper:4,0,Y,sage;onion;cozy,american,thanksgiving,,3
+turkey_brine,Turkey Brine Spice,whole_spice,,kosher_salt:60;brown_sugar:20;black_pepper:6;rosemary:4;sage:4;orange_peel:4;allspice:2,0,N,savory;herbal;citrus,american,thanksgiving,,3
+holiday_roast_rub,Holiday Roast Rub,rub,,kosher_salt:28;rosemary:18;garlic:16;black_pepper_tellicherry:14;thyme:10;orange_peel:8;juniper:6,0,N,herbal;piney;citrus,american;european,holiday_gift,,3
+vegetable_seasoning,Roasted Vegetable Seasoning,seasoning,,garlic:20;onion:16;kosher_salt:16;paprika_hungarian_sweet:12;thyme:10;rosemary:8;black_pepper:8;parsley:10,0,N,savory;herbal,american,base,salt_free,3
+popcorn_smoky,Smoky Popcorn Spice,seasoning,,flake_sea_salt:36;smoked_paprika_sweet:24;garlic:14;onion:12;cane_sugar:10;chipotle_morita:4,1,N,smoky;salty,american,chili_gameday,,3
+wing_dust,Hot Wing Dust,seasoning,,cayenne:24;paprika_hungarian_sweet:20;kosher_salt:18;garlic:14;cane_sugar:10;onion:8;black_pepper:6,4,N,hot;garlicky;tangy,american,chili_gameday,mild,4
+nashville_hot,Nashville-Style Hot Spice,seasoning,,cayenne:44;brown_sugar:18;paprika_hungarian_sweet:12;garlic:10;kosher_salt:10;black_pepper:6,5,N,searing;sweet,american,chili_gameday,,3
+salt_free_all_purpose,All-Purpose Salt-Free Seasoning,seasoning,,onion:20;garlic:18;black_pepper:10;parsley:10;lemon_peel:10;basil:8;thyme:8;paprika_hungarian_sweet:8;celery_seed:4;cayenne:4,1,Y,bright;savory,american,base,,4
+herb_salt,Herb Garden Salt,salt_blend,,sea_salt:60;parsley:10;basil:8;thyme:8;rosemary:8;garlic:6,0,N,herbal;salty,american;french,base,,2
+truffle_mushroom_salt,Porcini Mushroom Salt,salt_blend,,sea_salt:70;porcini_powder:20;black_pepper:6;thyme:4,0,N,earthy;umami,italian;french,holiday_gift,,2
+tomato_basil_blend,Tomato Basil Seasoning,seasoning,,tomato_powder:34;basil:22;garlic:14;onion:12;oregano_mediterranean:8;sea_salt:10,0,N,tomato;herbal,italian,base,,2
+umami_dust,Umami Dust,seasoning,,shiitake_powder:36;porcini_powder:20;sea_salt:18;onion:10;garlic:8;black_pepper:4;nori_flakes:4,0,N,deep;savory,japanese;american,soup_stew,,2
+green_goddess_herbs,Green Herb Dressing Blend,herb_blend,,parsley:28;chives:20;tarragon:14;dill_weed:14;garlic:10;onion:8;lemon_peel:6,0,Y,green;fresh,american,summer_iced,,2
+wasabi_style_powder,Wasabi-Style Powder,seasoning,wasabi,horseradish_powder:70;mustard_yellow:24;spearmint:2;parsley:4,3,Y,sharp;nose-tingling,japanese,base,,2
+hot_mustard_powder,Hot Mustard Powder,seasoning,mustard,mustard_brown:60;mustard_yellow:40,2,Y,sharp;pungent,chinese;american,base,,3

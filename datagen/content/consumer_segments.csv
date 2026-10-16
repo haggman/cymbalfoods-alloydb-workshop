@@ -1,0 +1,8 @@
+segment,share,tag_affinity,online_share,orders_per_year_median,gift_propensity,premium_affinity,description
+everyday_cook,0.34,american:3;italian:2;mexican:2;base:2,0.35,2.0,0.10,1.0,buys the staples and a few favorites; steady through the year
+home_baker,0.17,baking:5;french:1,0.40,3.0,0.25,1.4,cinnamon vanilla and baking spice; heavily seasonal in Q4
+grill_master,0.13,bbq:5;tex_mex:2;cajun:1,0.45,2.5,0.10,1.2,rubs and chiles; Memorial Day to Labor Day plus game day
+global_explorer,0.16,indian:3;middle_eastern:3;thai:2;chinese:2;north_african:2;japanese:2;korean:2,0.55,3.0,0.15,1.5,buys widely and tries new origins; drives long-tail sales
+gift_giver,0.10,holiday_gift:5;baking:2,0.70,1.2,0.90,1.8,buys mostly gift sets and premium items in November and December
+tea_and_coffee,0.06,tea:5,0.65,4.0,0.20,1.3,tea and coffee subscribers who add spices occasionally
+salt_free_shopper,0.04,american:3;italian:2,0.50,2.5,0.10,1.1,prefers salt-free blends

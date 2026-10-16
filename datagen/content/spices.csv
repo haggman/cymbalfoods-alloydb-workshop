@@ -1,0 +1,164 @@
+slug,name,ingredient_type,botanical_name,ambiguity_group,aliases,forms,origins,origin_variants,heat,scoville,flavor_notes,price_band,density,pack_family,seasonality,cuisine_tags,organic,popularity
+ancho,Ancho Chile,chile,Capsicum annuum,chile_powder,dried poblano,whole;ground,Mexico,N,1,1000-2000,raisin;dried plum;mild smoke,2,light,std,chili_gameday,mexican;tex_mex,Y,4
+guajillo,Guajillo Chile,chile,Capsicum annuum,,mirasol (dried),whole;ground,Mexico,N,2,2500-5000,bright;berry;tangy,2,light,std,chili_gameday,mexican;tex_mex,N,4
+pasilla,Pasilla Chile,chile,Capsicum annuum,,chile negro,whole;ground,Mexico,N,1,1000-2500,prune;cocoa;earthy,2,light,std,base,mexican,N,3
+mulato,Mulato Chile,chile,Capsicum annuum,,,whole;ground,Mexico,N,1,500-2500,chocolate;licorice;sweet,2,light,std,base,mexican,N,2
+chipotle_morita,Chipotle Morita Chile,chile,Capsicum annuum,,smoked jalapeno;morita,whole;ground,Mexico,N,3,5000-10000,smoky;fruity;sweet heat,3,light,std,grilling,mexican;tex_mex;bbq,Y,4
+chipotle_meco,Chipotle Meco Chile,chile,Capsicum annuum,,smoked jalapeno;chipotle tipico,whole;ground,Mexico,N,3,5000-10000,heavy smoke;tobacco;leather,3,light,std,grilling,mexican;bbq,N,2
+cascabel,Cascabel Chile,chile,Capsicum annuum,,rattle chile,whole;ground,Mexico,N,2,1500-2500,nutty;woody,2,light,std,base,mexican,N,2
+chile_de_arbol,Chile de Arbol,chile,Capsicum annuum,,arbol;bird's beak chile,whole;ground;crushed,Mexico,N,4,15000-30000,sharp;grassy;clean heat,2,light,std,base,mexican;tex_mex,N,4
+pequin,Pequin Chile,chile,Capsicum annuum,,piquin;chiltepin (wild),whole;crushed,Mexico,N,5,40000-60000,citrus;smoky;fierce,3,dense,std,base,mexican;tex_mex,N,2
+puya,Puya Chile,chile,Capsicum annuum,,pulla,whole;ground,Mexico,N,3,5000-8000,fruity;licorice,2,light,std,base,mexican,N,2
+costeno,Costeno Chile,chile,Capsicum annuum,,costeno rojo,whole,Mexico,N,3,4000-15000,apricot;bright,3,light,std,base,mexican,N,1
+new_mexico_red,New Mexico Red Chile,chile,Capsicum annuum,chile_powder,red chile;Hatch red,whole;ground;crushed,United States,N,2,800-1400,earthy;sweet;sun-dried,2,light,std,chili_gameday,tex_mex;american,Y,4
+new_mexico_green,New Mexico Green Chile,chile,Capsicum annuum,chile_powder,green chile;Hatch green,ground;flakes,United States,N,2,1000-2000,roasted;vegetal;bright,3,light,std,grilling,tex_mex;american,N,3
+california_chile,California Chile,chile,Capsicum annuum,chile_powder,dried Anaheim,whole;ground,United States,N,1,500-1000,mild;sweet;raisin,2,light,std,base,mexican;tex_mex,N,2
+cayenne,Cayenne Pepper,chile,Capsicum annuum,pepper,cayenne chile;ground red pepper,ground,India;China,N,4,30000-50000,sharp;clean heat,1,medium,std,base,cajun;american;bbq,Y,5
+crushed_red_pepper,Crushed Red Pepper,chile,Capsicum annuum,pepper,red pepper flakes;pizza pepper,crushed,China;India,N,3,15000-30000,toasty;sharp,1,light,std,base,italian;american,Y,5
+jalapeno,Jalapeno,chile,Capsicum annuum,,green jalapeno,ground;flakes,Mexico;United States,N,3,2500-8000,grassy;green;bright,2,light,std,grilling,tex_mex;mexican,N,3
+serrano,Serrano Chile,chile,Capsicum annuum,,,ground,Mexico,N,3,10000-23000,green;crisp,2,light,std,base,mexican,N,2
+habanero,Habanero,chile,Capsicum chinense,,,ground;flakes,Mexico,N,5,100000-350000,tropical;floral;intense,3,light,std,base,mexican;caribbean,N,3
+scotch_bonnet,Scotch Bonnet,chile,Capsicum chinense,,bonney pepper,ground,Jamaica,N,5,100000-350000,fruity;floral;intense,3,light,std,grilling,caribbean,N,2
+ghost_pepper,Ghost Pepper,chile,Capsicum chinense,,bhut jolokia,ground;crushed,India,N,5,800000-1000000,smoky;fruity;extreme,4,light,std,base,indian;american,N,2
+aleppo_style,Aleppo-Style Pepper,chile,Capsicum annuum,pepper,halaby pepper,crushed,Turkey,N,2,10000-15000,oily;fruity;cumin-like,3,light,std,base,middle_eastern;mediterranean,N,3
+urfa_biber,Urfa Biber,chile,Capsicum annuum,,isot pepper,crushed,Turkey,N,2,7500-10000,raisin;chocolate;smoky,3,light,std,base,middle_eastern,N,2
+marash,Marash Pepper,chile,Capsicum annuum,,maras pepper,crushed,Turkey,N,2,5000-10000,fruity;salty-oily,3,light,std,base,middle_eastern,N,2
+kashmiri_chile,Kashmiri Chile,chile,Capsicum annuum,,kashmiri mirch,whole;ground,India,N,1,1000-2000,vivid red;mild;fruity,2,light,std,diwali,indian,N,4
+byadgi,Byadgi Chile,chile,Capsicum annuum,,,whole;ground,India,N,1,1500-2500,deep red;mild,2,light,std,base,indian,N,2
+guntur_sannam,Guntur Sannam Chile,chile,Capsicum annuum,,guntur chile,whole;ground,India,N,4,35000-40000,pungent;sharp,1,light,std,base,indian,N,2
+gochugaru,Gochugaru,chile,Capsicum annuum,,Korean red pepper flakes,flakes;powder,South Korea;China,N,2,4000-8000,sweet;smoky;fruity,3,light,std,base,korean,N,4
+sichuan_erjingtiao,Erjingtiao Chile,chile,Capsicum annuum,,Sichuan chile,whole;crushed,China,N,2,5000-10000,fragrant;fruity,2,light,std,lunar_new_year,chinese,N,2
+facing_heaven,Facing Heaven Chile,chile,Capsicum annuum,,chao tian jiao,whole,China,N,3,30000-50000,fragrant;sharp,2,light,std,lunar_new_year,chinese,N,2
+tien_tsin,Tien Tsin Chile,chile,Capsicum annuum,,Tianjin chile,whole;crushed,China,N,4,50000-75000,hot;bright,2,light,std,lunar_new_year,chinese,N,2
+thai_bird,Thai Bird's Eye Chile,chile,Capsicum annuum,,prik kee noo,whole;ground;crushed,Thailand,N,5,50000-100000,fiery;fruity,2,light,std,base,thai;southeast_asian,N,3
+african_birds_eye,African Bird's Eye Chile,chile,Capsicum frutescens,,piri piri;peri peri chile,whole;ground;crushed,Malawi;Uganda,N,5,50000-175000,citrus;searing,3,light,std,grilling,african,N,2
+aji_amarillo,Aji Amarillo,chile,Capsicum baccatum,,yellow chile,ground,Peru,N,3,30000-50000,fruity;tropical;bright,3,light,std,base,peruvian;latin,N,3
+aji_panca,Aji Panca,chile,Capsicum chinense,,,whole;ground,Peru,N,1,1000-1500,berry;smoky;mild,3,light,std,base,peruvian,N,2
+aji_mirasol,Aji Mirasol,chile,Capsicum baccatum,,dried aji amarillo,whole,Peru,N,3,30000-50000,fruity;berry,3,light,std,base,peruvian,N,1
+calabrian_chile,Calabrian Chile,chile,Capsicum annuum,,peperoncino calabrese,crushed,Italy,N,3,25000-40000,fruity;salty;bright,3,light,std,base,italian,N,3
+espelette,Espelette Pepper,chile,Capsicum annuum,,piment d'Espelette,ground,France,N,2,4000-6000,sweet;peach;gentle heat,5,medium,std,base,french,N,2
+paprika_hungarian_sweet,Hungarian Sweet Paprika,chile,Capsicum annuum,paprika,edesnemes;noble sweet paprika,ground,Hungary,N,0,100-500,sweet;bright;fruity,2,medium,std,base,eastern_european;american,Y,5
+paprika_hungarian_hot,Hungarian Hot Paprika,chile,Capsicum annuum,paprika,eros paprika,ground,Hungary,N,3,5000-10000,sharp;red fruit,2,medium,std,base,eastern_european,N,3
+paprika_spanish_sweet,Spanish Sweet Paprika,chile,Capsicum annuum,paprika,pimenton dulce (unsmoked),ground,Spain;Peru,N,0,100-500,mild;sweet,1,medium,std,base,spanish;american,N,4
+smoked_paprika_sweet,Smoked Paprika (Sweet),chile,Capsicum annuum,paprika,pimenton de la Vera dulce;sweet smoked paprika,ground,Spain,N,0,100-500,deep oak smoke;sweet;rich,3,medium,std,grilling,spanish;bbq;american,Y,5
+smoked_paprika_bittersweet,Smoked Paprika (Bittersweet),chile,Capsicum annuum,paprika,pimenton de la Vera agridulce,ground,Spain,N,1,500-1500,oak smoke;bitter edge,3,medium,std,grilling,spanish;bbq,N,3
+smoked_paprika_hot,Smoked Paprika (Hot),chile,Capsicum annuum,paprika,pimenton de la Vera picante,ground,Spain,N,3,5000-10000,oak smoke;lingering heat,3,medium,std,grilling,spanish;bbq,N,3
+red_bell_pepper,Red Bell Pepper Flakes,aromatic,Capsicum annuum,pepper,sweet pepper flakes,flakes;granules,United States;Spain,N,0,0,sweet;vegetal,2,light,std,base,american,N,2
+black_pepper,Black Pepper (Cymbal House Standard),peppercorn,Piper nigrum,pepper,black peppercorns,whole;ground;cracked;coarse,Vietnam;Brazil;Indonesia,N,1,,sharp;piney;warm,1,dense,std,base,american;french;italian,Y,5
+black_pepper_tellicherry,Tellicherry Black Pepper,peppercorn,Piper nigrum,pepper,Tellicherry extra bold,whole;ground;cracked,India,N,1,,bright;citrus;resinous,2,dense,std,base,indian;french;american,Y,5
+black_pepper_malabar,Malabar Black Pepper,peppercorn,Piper nigrum,pepper,,whole;ground,India,N,1,,bold;earthy,2,dense,std,base,indian,N,3
+black_pepper_vietnamese,Vietnamese Black Pepper,peppercorn,Piper nigrum,pepper,Phu Quoc pepper,whole;ground,Vietnam,N,1,,sharp;bright heat,2,dense,std,base,vietnamese,N,3
+black_pepper_lampong,Lampong Black Pepper,peppercorn,Piper nigrum,pepper,Lampung pepper,whole;ground,Indonesia,N,1,,smoky;intense,2,dense,std,base,southeast_asian,N,2
+white_pepper,White Pepper,peppercorn,Piper nigrum,pepper,Muntok white pepper,whole;ground,Indonesia;Vietnam,N,1,,fermented;earthy;sharp,2,dense,std,base,chinese;french;vietnamese,N,4
+green_peppercorns,Green Peppercorns (Dried),peppercorn,Piper nigrum,pepper,,whole,India,N,1,,fresh;herbal;mild,3,light,std,base,french;thai,N,2
+pink_peppercorns,Pink Peppercorns,peppercorn,Schinus terebinthifolius,pepper,pink pepper;baies roses (not a true pepper),whole,Brazil;Madagascar,N,0,,sweet;resinous;fruity,3,light,std,holiday_gift,french,N,3
+sichuan_pepper_red,Red Sichuan Pepper,peppercorn,Zanthoxylum bungeanum,pepper,Sichuan peppercorn;hua jiao (not a true pepper),whole;ground,China,N,1,,numbing;citrus;floral,3,light,std,lunar_new_year,chinese,N,4
+sichuan_pepper_green,Green Sichuan Pepper,peppercorn,Zanthoxylum armatum,pepper,qing hua jiao,whole,China,N,1,,numbing;lime;herbal,3,light,std,lunar_new_year,chinese,N,2
+long_pepper,Long Pepper,peppercorn,Piper longum,pepper,pippali,whole;ground,Indonesia;India,N,2,,sweet heat;warm;resinous,4,dense,std,holiday_gift,indian;french,N,2
+cubeb,Cubeb Pepper,peppercorn,Piper cubeba,pepper,tailed pepper,whole,Indonesia,N,1,,allspice;pine;bitter,4,dense,std,base,north_african,N,1
+grains_of_paradise,Grains of Paradise,peppercorn,Aframomum melegueta,pepper,melegueta pepper,whole,Ghana,N,1,,citrus;floral;peppery,4,dense,std,base,african;north_african,N,2
+timut_pepper,Timut Pepper,peppercorn,Zanthoxylum armatum,pepper,,whole,Nepal,N,1,,grapefruit;tingling,4,light,std,base,south_asian,N,1
+voatsiperifery,Voatsiperifery Pepper,peppercorn,Piper borbonense,pepper,wild Madagascar pepper,whole,Madagascar,N,1,,woody;citrus;earthy,5,dense,std,holiday_gift,french,N,1
+tasmanian_pepperberry,Tasmanian Pepperberry,peppercorn,Tasmannia lanceolata,pepper,mountain pepper,whole;ground,Australia,N,2,,berry;sharp;numbing,5,light,std,base,australian,N,1
+cinnamon_ceylon,Ceylon Cinnamon,spice,Cinnamomum verum,cinnamon,true cinnamon;canela;Sri Lankan cinnamon,sticks;ground,Sri Lanka,N,0,,delicate;floral;citrus,3,medium,std,baking,mexican;baking;indian,Y,5
+cinnamon_cassia,Chinese Cassia Cinnamon,spice,Cinnamomum cassia,cinnamon,cassia;Chinese cinnamon,sticks;ground;chips,China,N,0,,bold;spicy;sweet,1,medium,std,baking,chinese;baking;american,N,4
+cinnamon_saigon,Saigon Cinnamon,spice,Cinnamomum loureiroi,cinnamon,Vietnamese cinnamon;Vietnamese cassia,sticks;ground;chips,Vietnam,N,0,,intense;sweet;hot cinnamon,2,medium,std,baking,baking;vietnamese;american,Y,5
+cinnamon_korintje,Korintje Cinnamon,spice,Cinnamomum burmannii,cinnamon,Indonesian cinnamon;Padang cassia,sticks;ground,Indonesia,N,0,,smooth;classic;sweet,1,medium,std,baking,baking;american,Y,5
+nutmeg,Nutmeg,spice,Myristica fragrans,,,whole;ground,Grenada;Indonesia,N,0,,warm;sweet;piney,2,dense,std,baking,baking;indian;caribbean;european,Y,5
+mace,Mace,spice,Myristica fragrans,,mace blades,blades;ground,Grenada;Indonesia,N,0,,delicate nutmeg;citrus,4,light,std,baking,baking;indian,N,2
+cloves,Cloves,spice,Syzygium aromaticum,,,whole;ground,Madagascar;Tanzania;Indonesia,N,0,,pungent;sweet;medicinal,2,dense,std,baking,baking;indian;chinese,Y,5
+allspice,Allspice,spice,Pimenta dioica,allspice,Jamaica pepper;pimento,whole;ground,Jamaica,N,0,,clove;cinnamon;nutmeg,2,dense,std,baking,caribbean;baking;middle_eastern,Y,4
+star_anise,Star Anise,spice,Illicium verum,,,whole;ground,Vietnam;China,N,0,,licorice;sweet;warm,2,light,std,lunar_new_year,chinese;vietnamese,Y,4
+cardamom_green,Green Cardamom,spice,Elettaria cardamomum,cardamom,cardamom;elaichi,pods;decorticated;ground,Guatemala;India,Y,0,,floral;eucalyptus;citrus,4,dense,std,diwali,indian;scandinavian;middle_eastern;baking,Y,4
+cardamom_black,Black Cardamom,spice,Amomum subulatum,cardamom,badi elaichi;smoked cardamom,pods;ground,Nepal;India,N,0,,smoky;camphor;resin,3,dense,std,base,indian;chinese,N,2
+ginger,Ginger,spice,Zingiber officinale,ginger,ground ginger,ground;slices,India;Nigeria;China,Y,1,,warm;bright;biting,1,medium,std,baking,baking;indian;chinese;caribbean,Y,5
+vanilla_madagascar,Madagascar Vanilla,specialty,Vanilla planifolia,vanilla,Bourbon vanilla,beans;ground,Madagascar,N,0,,creamy;rich;sweet,5,light,vanilla,baking,baking;french,Y,4
+vanilla_tahitian,Tahitian Vanilla,specialty,Vanilla tahitensis,vanilla,,beans,French Polynesia;Papua New Guinea,N,0,,floral;cherry;anise,5,light,vanilla,baking,baking;french,N,2
+vanilla_mexican,Mexican Vanilla,specialty,Vanilla planifolia,vanilla,,beans,Mexico,N,0,,spicy;woody;sweet,5,light,vanilla,baking,baking;mexican,N,2
+vanilla_ugandan,Ugandan Vanilla,specialty,Vanilla planifolia,vanilla,,beans,Uganda,N,0,,chocolate;bold,5,light,vanilla,baking,baking,N,1
+anise_seed,Anise Seed,seed,Pimpinella anisum,,aniseed,whole;ground,Turkey;Egypt,N,0,,licorice;sweet,2,dense,std,baking,baking;italian;mexican,N,3
+fennel_seed,Fennel Seed,seed,Foeniculum vulgare,,,whole;ground,India;Egypt,N,0,,sweet;anise;green,1,dense,std,base,italian;indian,Y,4
+licorice_root,Licorice Root,specialty,Glycyrrhiza glabra,,,cut;ground,China;Uzbekistan,N,0,,very sweet;anise,2,light,std,hot_tea,chinese;tea,N,1
+mahlab,Mahlab,specialty,Prunus mahaleb,,mahleb,whole;ground,Turkey,N,0,,cherry pit;almond;floral,4,dense,std,holiday_gift,middle_eastern;greek;baking,N,1
+mastic,Mastic,specialty,Pistacia lentiscus,,mastic tears;mastiha,tears,Greece,N,0,,pine;resin;cool,5,dense,std,holiday_gift,greek;middle_eastern,N,1
+juniper,Juniper Berries,spice,Juniperus communis,,,whole,Albania;North Macedonia,N,0,,piney;gin-like;resin,2,dense,std,soup_stew,european;scandinavian,N,2
+cumin,Cumin,seed,Cuminum cyminum,cumin,comino;jeera,whole;ground;toasted ground,India;Turkey,Y,0,,earthy;warm;musky,1,dense,std,chili_gameday,mexican;indian;middle_eastern;tex_mex,Y,5
+black_cumin,Black Cumin (Shahi Jeera),seed,Bunium persicum,cumin,shahi jeera;kala jeera,whole,India,N,0,,smoky;sweet;earthy,4,dense,std,diwali,indian,N,1
+nigella,Nigella Seed,seed,Nigella sativa,cumin,kalonji;black onion seed;black seed,whole,India;Egypt,N,0,,oniony;oregano;bitter,2,dense,std,base,indian;middle_eastern,N,3
+caraway,Caraway Seed,seed,Carum carvi,,,whole;ground,Netherlands;Egypt,N,0,,rye bread;anise;earthy,2,dense,std,soup_stew,eastern_european;german;scandinavian,N,3
+coriander,Coriander Seed,seed,Coriandrum sativum,,,whole;ground,Morocco;India;Bulgaria,N,0,,citrus;floral;nutty,1,dense,std,base,indian;mexican;middle_eastern,Y,5
+celery_seed,Celery Seed,seed,Apium graveolens,,,whole;ground,India,N,0,,grassy;bitter;savory,1,dense,std,pickling,american;pickling,N,3
+dill_seed,Dill Seed,seed,Anethum graveolens,dill,,whole,India,N,0,,caraway;sharp,1,dense,std,pickling,pickling;eastern_european,N,2
+fenugreek,Fenugreek Seed,seed,Trigonella foenum-graecum,fenugreek,methi,whole;ground,India,N,0,,maple;bitter;nutty,1,dense,std,base,indian;african,N,3
+mustard_yellow,Yellow Mustard Seed,seed,Sinapis alba,mustard,white mustard,whole;ground,Canada,N,1,,mild;tangy,1,dense,std,pickling,american;pickling,Y,4
+mustard_brown,Brown Mustard Seed,seed,Brassica juncea,mustard,,whole;ground,Canada;India,N,2,,pungent;nutty,1,dense,std,pickling,indian;pickling;french,N,3
+mustard_black,Black Mustard Seed,seed,Brassica nigra,mustard,rai,whole,India,N,2,,sharp;nutty when fried,2,dense,std,diwali,indian,N,2
+sesame_white,White Sesame Seed,seed,Sesamum indicum,sesame,hulled sesame,whole;toasted,India;Mexico,N,0,,nutty;sweet,1,dense,std,base,japanese;chinese;middle_eastern,Y,4
+sesame_black,Black Sesame Seed,seed,Sesamum indicum,sesame,,whole;toasted,China;India,N,0,,bitter;earthy;nutty,2,dense,std,lunar_new_year,japanese;chinese;korean,N,3
+poppy_blue,Blue Poppy Seed,seed,Papaver somniferum,,,whole,Czech Republic;Turkey,N,0,,nutty;bluish,2,dense,std,baking,baking;eastern_european,N,3
+poppy_white,White Poppy Seed,seed,Papaver somniferum,,khus khus,whole,India,N,0,,mild;creamy,3,dense,std,diwali,indian,N,1
+ajwain,Ajwain Seed,seed,Trachyspermum ammi,,carom seed;bishop's weed,whole,India,N,1,,thyme;sharp,2,dense,std,base,indian,N,2
+annatto,Annatto Seed,seed,Bixa orellana,,achiote,whole;ground,Peru,N,0,,earthy;peppery;color,1,dense,std,base,mexican;caribbean;latin,N,3
+sumac,Sumac,spice,Rhus coriaria,,,ground,Turkey,N,0,,tart;lemony;berry,2,medium,std,base,middle_eastern,Y,4
+anardana,Anardana,spice,Punica granatum,,dried pomegranate seeds,whole;ground,India,N,0,,tart;fruity,3,dense,std,base,indian,N,1
+amchur,Amchur,spice,Mangifera indica,,dried mango powder,ground,India,N,0,,sour;fruity,2,medium,std,base,indian,N,2
+basil,Sweet Basil,herb,Ocimum basilicum,basil,,leaves;cut,Egypt;United States,N,0,,sweet;anise;clove,1,light,std,grilling,italian;american,Y,5
+oregano_mediterranean,Mediterranean Oregano,herb,Origanum onites,oregano,Turkish oregano,leaves;ground,Turkey,N,0,,peppery;bold,1,light,std,base,italian;greek;mediterranean;american,Y,5
+oregano_greek,Greek Oregano,herb,Origanum vulgare hirtum,oregano,rigani,leaves;on the stem,Greece,N,0,,pungent;resinous,3,light,std,base,greek,N,3
+oregano_mexican,Mexican Oregano,herb,Lippia graveolens,oregano,(not a true oregano),leaves;ground,Mexico,N,0,,citrus;licorice;bold,2,light,std,chili_gameday,mexican;tex_mex,Y,4
+marjoram,Marjoram,herb,Origanum majorana,,sweet marjoram,leaves;ground,Egypt,N,0,,sweet;floral;pine,1,light,std,thanksgiving,french;german;american,N,3
+thyme,Thyme,herb,Thymus vulgaris,,French thyme,leaves;ground,Spain;Morocco,N,0,,earthy;minty;floral,1,light,std,thanksgiving,french;american;cajun,Y,5
+thyme_lemon,Lemon Thyme,herb,Thymus citriodorus,,,leaves,United States,N,0,,lemon;herbal,3,light,std,base,french,N,1
+rosemary,Rosemary,herb,Salvia rosmarinus,,,leaves;ground,Morocco;Spain,N,0,,pine;camphor;woody,1,light,std,thanksgiving,italian;french;american,Y,5
+sage,Sage,herb,Salvia officinalis,,Dalmatian sage,rubbed;ground;cut,Albania,N,0,,musty;earthy;warm,1,light,std,thanksgiving,american;italian,Y,4
+savory,Summer Savory,herb,Satureja hortensis,,,leaves,Albania,N,0,,peppery;thyme,2,light,std,soup_stew,french;eastern_european,N,1
+tarragon,French Tarragon,herb,Artemisia dracunculus,,,leaves,France;United States,N,0,,anise;sweet,4,light,std,base,french,N,2
+parsley,Parsley,herb,Petroselinum crispum,,,flakes,United States;Egypt,N,0,,green;clean,1,light,std,base,american;italian;french,Y,4
+chives,Chives,herb,Allium schoenoprasum,,freeze-dried chives,cut,United States,N,0,,mild onion;green,3,light,std,base,american;french,N,3
+dill_weed,Dill Weed,herb,Anethum graveolens,dill,dill,leaves,United States;Egypt,N,0,,fresh;grassy;anise,2,light,std,pickling,eastern_european;scandinavian;american,Y,4
+bay_turkish,Turkish Bay Leaves,herb,Laurus nobilis,bay,bay laurel,leaves;ground,Turkey,N,0,,herbal;tea-like;floral,2,light,std,soup_stew,mediterranean;american;french,Y,4
+bay_california,California Bay Leaves,herb,Umbellularia californica,bay,(not a true bay laurel),leaves,United States,N,0,,strong;eucalyptus;menthol,2,light,std,soup_stew,american,N,2
+cilantro,Cilantro Leaf,herb,Coriandrum sativum,,dried coriander leaf,leaves,Egypt;Mexico,N,0,,green;citrus;soapy for some,2,light,std,base,mexican;thai,N,2
+peppermint,Peppermint,herb,Mentha piperita,mint,,cut,United States;Egypt,N,0,,cool;menthol;sweet,2,light,std,holiday_gift,middle_eastern;tea;baking,Y,3
+spearmint,Spearmint,herb,Mentha spicata,mint,,cut,Egypt;Morocco,N,0,,mild;sweet;green,2,light,std,summer_iced,middle_eastern;north_african;tea,Y,3
+lemongrass,Lemongrass,herb,Cymbopogon citratus,,,cut;ground,Vietnam;Thailand,N,0,,lemon;ginger;grassy,2,light,std,base,thai;vietnamese,N,3
+makrut_lime_leaves,Makrut Lime Leaves,herb,Citrus hystrix,,,leaves;ground,Thailand,N,0,,intense lime;floral,4,light,std,base,thai,N,2
+curry_leaves,Curry Leaves,herb,Murraya koenigii,curry,kadi patta,leaves,India,N,0,,citrus;nutty;savory,4,light,std,diwali,indian,N,2
+epazote,Epazote,herb,Dysphania ambrosioides,,,leaves,Mexico,N,0,,pungent;petrol-like;mint,2,light,std,base,mexican,N,1
+lavender,Culinary Lavender,flower,Lavandula angustifolia,,lavender buds,buds,France;United States,N,0,,floral;sweet;camphor,3,light,std,baking,french;baking,Y,3
+chervil,Chervil,herb,Anthriscus cerefolium,,,leaves,Germany,N,0,,parsley;anise,4,light,std,base,french,N,1
+kasuri_methi,Kasuri Methi,herb,Trigonella foenum-graecum,fenugreek,dried fenugreek leaves,leaves,India,N,0,,maple;bitter;herbal,2,light,std,diwali,indian,N,3
+rose_petals,Rose Petals,flower,Rosa damascena,,culinary rose,petals;ground,Turkey,N,0,,floral;sweet,3,light,std,holiday_gift,middle_eastern;indian,N,2
+safflower,Safflower,flower,Carthamus tinctorius,saffron,Mexican saffron;bastard saffron (not saffron),petals,Mexico;India,N,0,,mild;earthy;color only,1,light,std,base,mexican,N,1
+saffron_spain,Spanish Saffron,flower,Crocus sativus,saffron,La Mancha saffron;azafran,threads;ground,Spain,N,0,,honey;hay;metallic,5,light,saffron,holiday_gift,spanish;french;indian,N,4
+saffron_kashmir,Kashmiri Saffron,flower,Crocus sativus,saffron,kesar;mongra saffron,threads,India,N,0,,deep;floral;honey,5,light,saffron,diwali,indian,N,2
+saffron_greek,Greek Saffron,flower,Crocus sativus,saffron,Kozani saffron,threads,Greece,N,0,,floral;sweet;hay,5,light,saffron,holiday_gift,greek;french,N,1
+garlic,Garlic,aromatic,Allium sativum,garlic,,granulated;powder;minced;chopped,United States;China,Y,0,,pungent;savory;sweet when cooked,1,medium,std,base,american;italian;chinese;mexican,Y,5
+garlic_roasted,Roasted Garlic,aromatic,Allium sativum,garlic,toasted garlic,granulated;minced,United States,N,0,,sweet;nutty;roasted,2,medium,std,base,american;italian,N,3
+black_garlic,Black Garlic,aromatic,Allium sativum,garlic,aged garlic,powder,South Korea;United States,N,0,,balsamic;molasses;umami,4,medium,std,holiday_gift,korean;american,N,2
+onion,Onion,aromatic,Allium cepa,,white onion,powder;granulated;minced;chopped,United States,N,0,,savory;sweet;sulfur,1,medium,std,base,american;mexican;italian,Y,5
+onion_toasted,Toasted Onion,aromatic,Allium cepa,,,minced,United States,N,0,,roasted;sweet;deep,2,medium,std,base,american;eastern_european,N,3
+shallot,Shallot,aromatic,Allium ascalonicum,,freeze-dried shallot,minced,France;United States,N,0,,delicate onion;garlic,4,light,std,base,french,N,2
+porcini_powder,Porcini Mushroom Powder,aromatic,Boletus edulis,,,powder,Italy;China,N,0,,earthy;woodsy;umami,4,medium,std,soup_stew,italian;french,N,3
+shiitake_powder,Shiitake Mushroom Powder,aromatic,Lentinula edodes,,,powder,China;Japan,N,0,,smoky;umami,3,medium,std,soup_stew,japanese;chinese,N,2
+tomato_powder,Tomato Powder,aromatic,Solanum lycopersicum,,,powder,United States;Turkey,N,0,,tangy;sweet;umami,2,medium,std,base,italian;american,N,2
+turmeric,Turmeric,spice,Curcuma longa,,haldi,ground;whole,India,N,0,,earthy;bitter;musky,1,medium,std,base,indian;southeast_asian,Y,5
+turmeric_alleppey,Alleppey Turmeric,spice,Curcuma longa,,high-curcumin turmeric,ground,India,N,0,,bold;earthy;vivid,2,medium,std,base,indian,N,2
+galangal,Galangal,spice,Alpinia galanga,ginger,Thai ginger;blue ginger,ground;slices,Thailand;Indonesia,N,1,,piney;citrus;peppery,3,medium,std,base,thai;southeast_asian,N,2
+horseradish_powder,Horseradish Powder,aromatic,Armoracia rusticana,wasabi,,powder,United States,N,3,,sharp;nose-tingling,2,medium,std,thanksgiving,american;eastern_european,N,2
+wasabi_japanese,Real Wasabi Powder,aromatic,Eutrema japonicum,wasabi,hon wasabi (most wasabi powder is horseradish),powder,Japan,N,3,,green;sweet heat;clean,5,medium,std,base,japanese,N,1
+lemon_peel,Lemon Peel,citrus,Citrus limon,,,granules;zest,United States;Spain,N,0,,bright;tart;oil,2,medium,std,baking,baking;mediterranean,N,3
+orange_peel,Orange Peel,citrus,Citrus sinensis,,,granules;zest,United States,N,0,,sweet;bitter;orange oil,2,medium,std,holiday_gift,baking;chinese,N,3
+lime_powder,Lime Powder,citrus,Citrus aurantiifolia,,,powder,Mexico,N,0,,tart;sour,2,medium,std,summer_iced,mexican,N,1
+black_lime,Black Lime,citrus,Citrus aurantiifolia,,loomi;dried lime,whole;ground,Oman,N,0,,sour;fermented;smoky,3,light,std,base,middle_eastern,N,1
+asafoetida,Asafoetida,specialty,Ferula assa-foetida,,hing (compounded with rice flour),powder,India,N,0,,sulfur;onion-garlic when cooked,3,medium,std,diwali,indian,N,2
+sea_salt,Sea Salt,salt,,salt,,fine;coarse,Portugal;Mexico,N,0,,clean;briny,1,dense,salt,base,american;french,N,5
+flake_sea_salt,Flake Sea Salt,salt,,salt,finishing salt,flakes,Cyprus,N,0,,crunchy;clean,3,light,salt,holiday_gift,american;french,N,4
+fleur_de_sel,Fleur de Sel,salt,,salt,,fine,France,N,0,,moist;mineral;delicate,4,dense,salt,holiday_gift,french,N,3
+sel_gris,Sel Gris,salt,,salt,grey sea salt;Celtic grey salt,coarse,France,N,0,,mineral;moist,3,dense,salt,base,french,N,2
+kosher_salt,Kosher Salt,salt,,salt,koshering salt,coarse,United States,N,0,,clean;flaky,1,dense,salt,base,american,N,5
+himalayan_pink_salt,Himalayan Pink Salt,salt,,salt,pink salt (not curing salt),fine;coarse,Pakistan,N,0,,mineral;mild,2,dense,salt,base,american,N,5
+kala_namak,Kala Namak,salt,,salt,Indian black salt,fine,India;Pakistan,N,0,,sulfur;egg-like,2,dense,salt,base,indian,N,2
+black_lava_salt,Black Lava Salt,salt,,salt,black salt (activated charcoal),coarse,Cyprus,N,0,,earthy;striking color,3,dense,salt,holiday_gift,american,N,2
+alaea_salt,Alaea Red Salt,salt,,salt,Hawaiian red salt,coarse,United States,N,0,,earthy;mineral,3,dense,salt,grilling,hawaiian,N,2
+smoked_sea_salt,Smoked Sea Salt,salt,,salt,hickory smoked salt,coarse,United States,N,0,,hickory smoke;savory,2,dense,salt,grilling,bbq;american,N,3

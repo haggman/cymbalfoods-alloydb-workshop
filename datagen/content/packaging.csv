@@ -1,0 +1,62 @@
+pack_code,pack_family,density,description,container,net_qty,net_uom,net_oz,channels,min_popularity,shelf_life_months
+JAR,std,dense,3 oz glass jar,jar,3,oz,3,store;online,1,36
+JAR,std,medium,2.2 oz glass jar,jar,2.2,oz,2.2,store;online,1,36
+JAR,std,light,0.6 oz glass jar,jar,0.6,oz,0.6,store;online,1,24
+B04,std,dense,4 oz refill bag,bag,4,oz,4,store;online,2,36
+B04,std,medium,4 oz refill bag,bag,4,oz,4,store;online,2,36
+B02,std,light,2 oz refill bag,bag,2,oz,2,store;online,2,24
+B08,std,dense,1/2 lb bag,bag,0.5,lb,8,online;wholesale,2,36
+B08,std,medium,1/2 lb bag,bag,0.5,lb,8,online;wholesale,2,36
+B08,std,light,1/2 lb bag,bag,0.5,lb,8,online;wholesale,3,24
+B16,std,dense,1 lb bag,bag,1,lb,16,online;wholesale,1,36
+B16,std,medium,1 lb bag,bag,1,lb,16,online;wholesale,1,36
+B16,std,light,1 lb bag,bag,1,lb,16,wholesale,2,24
+B80,std,dense,5 lb bulk bag,bag,5,lb,80,wholesale,2,36
+B80,std,medium,5 lb bulk bag,bag,5,lb,80,wholesale,3,36
+B80,std,light,5 lb bulk bag,bag,5,lb,80,wholesale,4,24
+P400,std,dense,25 lb bulk box,box,25,lb,400,wholesale,3,36
+P400,std,medium,25 lb bulk box,box,25,lb,400,wholesale,4,36
+G05,saffron,light,0.5 g vial,vial,0.5,g,0.0176,store;online,1,36
+G02,saffron,light,2 g tin,tin,2,g,0.0705,store;online,1,36
+G28,saffron,light,1 oz (28 g) tin,tin,1,oz,1,wholesale;online,2,36
+V02,vanilla,light,2 vanilla beans,tube,2,ct,0.21,store;online,1,24
+V10,vanilla,light,10 vanilla beans,pack,10,ct,1.06,online,1,24
+V25,vanilla,light,1/4 lb vanilla beans,pack,0.25,lb,4,wholesale;online,2,24
+V100,vanilla,light,1 lb vanilla beans,pack,1,lb,16,wholesale,3,24
+O250,oil,,250 ml (8.5 fl oz) bottle,bottle,8.5,fl_oz,,store;online,1,24
+O500,oil,,500 ml (16.9 fl oz) bottle,bottle,16.9,fl_oz,,store;online,2,24
+O3L,oil,,3 L tin,tin,101.4,fl_oz,,wholesale,2,24
+O1G,oil,,1 gal jug,jug,128,fl_oz,,wholesale,3,18
+N250,vinegar,,250 ml (8.5 fl oz) bottle,bottle,8.5,fl_oz,,store;online,1,48
+N500,vinegar,,500 ml (16.9 fl oz) bottle,bottle,16.9,fl_oz,,store;online,2,48
+N1G,vinegar,,1 gal jug,jug,128,fl_oz,,wholesale,2,48
+S05,sauce,,5 fl oz bottle,bottle,5,fl_oz,,store;online,1,18
+S12,sauce,,12 fl oz bottle,bottle,12,fl_oz,,store;online,2,18
+S1G,sauce,,1 gal jug,jug,128,fl_oz,,wholesale,2,12
+C08,condiment,,8 oz jar,jar,8,oz,8,store;online,1,18
+C16,condiment,,16 oz jar,jar,16,oz,16,online;wholesale,3,18
+C80,condiment,,5 lb tub,tub,5,lb,80,wholesale,3,12
+T02,tea,,2 oz tin,tin,2,oz,2,store;online,1,24
+T20,tea,,20 sachets,box,20,ct,1.4,store;online,2,24
+T04,tea,,4 oz refill bag,bag,4,oz,4,online,2,24
+T16,tea,,1 lb bag,bag,1,lb,16,online;wholesale,3,24
+K12,coffee,,12 oz whole bean,bag,12,oz,12,store;online,1,9
+K12G,coffee,,12 oz ground,bag,12,oz,12,store;online,2,6
+K32,coffee,,2 lb whole bean,bag,2,lb,32,online;wholesale,2,9
+K80,coffee,,5 lb whole bean,bag,5,lb,80,wholesale,3,9
+D08,baking_dry,,8 oz bag,bag,8,oz,8,store;online,1,24
+D16,baking_dry,,1 lb bag,bag,1,lb,16,store;online;wholesale,1,24
+D80,baking_dry,,5 lb bag,bag,5,lb,80,wholesale,2,24
+D400,baking_dry,,25 lb sack,sack,25,lb,400,wholesale,4,24
+E02,extract,,2 fl oz bottle,bottle,2,fl_oz,,store;online,1,48
+E04,extract,,4 fl oz bottle,bottle,4,fl_oz,,store;online,1,48
+E08,extract,,8 fl oz bottle,bottle,8,fl_oz,,online;wholesale,2,48
+E32,extract,,32 fl oz bottle,bottle,32,fl_oz,,wholesale,3,48
+Y08,syrup,,8 oz bottle,bottle,8,oz,8,store;online,1,24
+Y16,syrup,,16 oz bottle,bottle,16,oz,16,store;online,2,24
+Y1G,syrup,,1 gal jug,jug,128,fl_oz,,wholesale,3,18
+R01,dry_goods,,1 oz pack,pack,1,oz,1,store;online,1,24
+R04,dry_goods,,4 oz pack,pack,4,oz,4,online,2,24
+R16,dry_goods,,1 lb pack,pack,1,lb,16,wholesale,3,24
+GIFT,gift,,gift set,box,1,ct,,store;online,1,24
+GIFTW,gift,,gift set case of 6 (corporate gifting),case,6,ct,,wholesale,3,24

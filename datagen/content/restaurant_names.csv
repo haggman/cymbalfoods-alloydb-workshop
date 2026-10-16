@@ -1,0 +1,15 @@
+part,cuisine,words
+pattern,,{adj} {noun}|The {adj} {noun}|{noun} & {noun2}|{surname}'s {kind}|{noun} {kind}|Casa {surname}|{adj} {kind}|{place_word} {kind}|The {noun} Room|{noun} No. {n}
+adj,,Copper;Saltbox;Little;Golden;Crooked;Blue Door;Iron;Wild;Quiet;Red Clay;Smoked;Painted;Hollow;Lantern;Rusty;Brass;Velvet;Stone;Cedar;Juniper;Saffron;Ember;Third;Northside;Old Mill;Sunday;Twelve;Patient;Gilded;Bitter
+noun,,Fig;Ladle;Kettle;Anvil;Hearth;Orchard;Pantry;Lantern;Cleaver;Spoon;Table;Ember;Larder;Skillet;Harvest;Barrel;Comal;Tandoor;Wok;Olive;Rye;Clove;Cardamom;Pepper;Thistle;Magpie;Heron;Fox;Sparrow;Otter
+noun2,,Vine;Flame;Salt;Honey;Smoke;Sage;Thyme;Ash;Oak;Brine;Crumb;Spice
+kind,,Kitchen;Smokehouse;Cantina;Taqueria;Bistro;Trattoria;Bakehouse;Canteen;Supper Club;Noodle Bar;Grill;Cafe;Tavern;Eatery;Provisions;Catering Co.
+kind,bbq_smokehouse,Smokehouse;BBQ;Pit;Barbecue Co.
+kind,mexican,Taqueria;Cantina;Cocina;Antojitos
+kind,indian,Tandoor;Curry House;Dhaba;Kitchen
+kind,italian,Trattoria;Osteria;Pizzeria;Cucina
+kind,bakery_cafe,Bakehouse;Bakery;Patisserie;Cafe
+kind,chinese,Noodle House;Kitchen;Dumpling Bar
+kind,southeast_asian,Noodle Bar;Kitchen;Street Food
+kind,caterer_events,Catering Co.;Events;Provisions
+place_word,,Riverside;Eastside;Old Town;Harbor;Midtown;Uptown;Station;Market Street;Courthouse;Depot

@@ -1,0 +1,45 @@
+location_id,location_type,name,region_id,city,state,latitude,longitude,time_zone,opened_year,sq_ft,notes
+DC-NE,dc,Northeast Distribution Center,NE,Edison,NJ,40.52,-74.41,America/New_York,1998,240000,serves NE stores and NE online and wholesale
+DC-SE,dc,Southeast Distribution Center,SE,McDonough,GA,33.45,-84.15,America/New_York,2006,180000,serves SE
+DC-CE,dc,Central Distribution Center,CE,Houston,TX,29.70,-95.20,America/Chicago,2011,210000,serves CE; humid Gulf climate (clumping story)
+DC-WE,dc,West Distribution Center,WE,Ontario,CA,34.06,-117.65,America/Los_Angeles,2014,200000,serves WE
+ST-001,store,Cymbal Foods Greenwich Village,NE,New York,NY,40.73,-74.00,America/New_York,1962,2400,flagship descendant of the original spice counter
+ST-002,store,Cymbal Foods Park Slope,NE,Brooklyn,NY,40.67,-73.98,America/New_York,1994,2100,
+ST-003,store,Cymbal Foods Astoria,NE,Queens,NY,40.76,-73.92,America/New_York,2009,1900,
+ST-004,store,Cymbal Foods Montclair,NE,Montclair,NJ,40.82,-74.21,America/New_York,2001,2000,
+ST-005,store,Cymbal Foods Rittenhouse,NE,Philadelphia,PA,39.95,-75.17,America/New_York,1987,2200,
+ST-006,store,Cymbal Foods Fishtown,NE,Philadelphia,PA,39.97,-75.13,America/New_York,2018,1800,
+ST-007,store,Cymbal Foods Back Bay,NE,Boston,MA,42.35,-71.08,America/New_York,1991,2300,
+ST-008,store,Cymbal Foods Harvard Square,NE,Cambridge,MA,42.37,-71.12,America/New_York,2004,1700,
+ST-009,store,Cymbal Foods Federal Hill,NE,Providence,RI,41.82,-71.42,America/New_York,2012,1600,
+ST-010,store,Cymbal Foods New Haven,NE,New Haven,CT,41.31,-72.92,America/New_York,2015,1600,
+ST-011,store,Cymbal Foods Dupont Circle,NE,Washington,DC,38.91,-77.04,America/New_York,1999,2100,
+ST-012,store,Cymbal Foods Clarendon,NE,Arlington,VA,38.89,-77.10,America/New_York,2016,1900,
+ST-013,store,Cymbal Foods Inman Park,SE,Atlanta,GA,33.76,-84.35,America/New_York,2007,2200,
+ST-014,store,Cymbal Foods Decatur,SE,Decatur,GA,33.77,-84.30,America/New_York,2013,1800,
+ST-015,store,Cymbal Foods South End,SE,Charlotte,NC,35.21,-80.86,America/New_York,2014,1900,
+ST-016,store,Cymbal Foods Raleigh,SE,Raleigh,NC,35.78,-78.64,America/New_York,2017,1800,
+ST-017,store,Cymbal Foods East Nashville,SE,Nashville,TN,36.18,-86.75,America/Chicago,2016,2000,
+ST-018,store,Cymbal Foods King Street,SE,Charleston,SC,32.79,-79.94,America/New_York,2010,1700,
+ST-019,store,Cymbal Foods Savannah,SE,Savannah,GA,32.08,-81.09,America/New_York,2019,1500,
+ST-020,store,Cymbal Foods Winter Park,SE,Orlando,FL,28.60,-81.35,America/New_York,2012,1900,
+ST-021,store,Cymbal Foods Hyde Park,SE,Tampa,FL,27.94,-82.48,America/New_York,2021,1700,
+ST-022,store,Cymbal Foods Coral Gables,SE,Miami,FL,25.75,-80.26,America/New_York,2008,2000,
+ST-023,store,Cymbal Foods Montrose,CE,Houston,TX,29.74,-95.39,America/Chicago,2003,2300,
+ST-024,store,Cymbal Foods Heights,CE,Houston,TX,29.79,-95.40,America/Chicago,2020,1800,
+ST-025,store,Cymbal Foods Bishop Arts,CE,Dallas,TX,32.75,-96.83,America/Chicago,2011,2000,
+ST-026,store,Cymbal Foods South Congress,CE,Austin,TX,30.25,-97.75,America/Chicago,2009,2100,
+ST-027,store,Cymbal Foods Mueller,CE,Austin,TX,30.30,-97.70,America/Chicago,2025,1700,opens Mar 2025 inside the data window
+ST-028,store,Cymbal Foods Pearl,CE,San Antonio,TX,29.44,-98.48,America/Chicago,2015,1900,
+ST-029,store,Cymbal Foods Magazine Street,CE,New Orleans,LA,29.92,-90.09,America/Chicago,2005,1800,
+ST-030,store,Cymbal Foods Crossroads,CE,Kansas City,MO,39.09,-94.58,America/Chicago,2013,1800,
+ST-031,store,Cymbal Foods Highlands,CE,Denver,CO,39.76,-105.01,America/Denver,2016,1900,
+ST-032,store,Cymbal Foods Uptown,CE,Minneapolis,MN,44.95,-93.30,America/Chicago,2012,1800,
+ST-033,store,Cymbal Foods Silver Lake,WE,Los Angeles,CA,34.09,-118.27,America/Los_Angeles,2002,2200,
+ST-034,store,Cymbal Foods Culver City,WE,Culver City,CA,34.02,-118.40,America/Los_Angeles,2010,2000,
+ST-035,store,Cymbal Foods Old Pasadena,WE,Pasadena,CA,34.15,-118.15,America/Los_Angeles,2006,1900,
+ST-036,store,Cymbal Foods North Park,WE,San Diego,CA,32.75,-117.13,America/Los_Angeles,2014,1800,
+ST-037,store,Cymbal Foods Arcadia,WE,Phoenix,AZ,33.50,-111.98,America/Phoenix,2017,1800,
+ST-038,store,Cymbal Foods Alberta Arts,WE,Portland,OR,45.56,-122.65,America/Los_Angeles,2011,1800,
+ST-039,store,Cymbal Foods Sugar House,WE,Salt Lake City,UT,40.72,-111.86,America/Denver,2019,1600,
+ST-040,store,Cymbal Foods Midtown,WE,Sacramento,CA,38.57,-121.47,America/Los_Angeles,2026,1600,opens Aug 2026 inside the data window

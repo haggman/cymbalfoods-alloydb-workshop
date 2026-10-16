@@ -1,0 +1,9 @@
+# Cymbal Foods generator. Python 3.11+. Byte-for-byte reproducibility holds for the same versions of these
+# libraries; out/manifest.json records the versions each run used. Developed on Python 3.13, numpy 2.5.3,
+# pandas 3.0.5, pyarrow 26.0.0, duckdb 1.5.6.
+numpy>=2.0,<3
+pandas>=2.2
+pyarrow>=17
+duckdb>=1.1
+pyyaml>=6
+pytz          # duckdb needs it to return timestamps to Python

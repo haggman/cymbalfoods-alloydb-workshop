@@ -1,0 +1,14 @@
+profile,jan,feb,mar,apr,may,jun,jul,aug,sep,oct,nov,dec,rationale
+base,0.95,0.90,0.95,0.95,1.00,0.95,0.95,0.95,1.00,1.05,1.15,1.20,everyday cooking with a mild Q4 lift from holiday cooking and entertaining
+baking,0.75,0.75,0.85,0.90,0.80,0.70,0.70,0.80,1.05,1.35,1.85,1.95,home baking climbs from September and peaks across Thanksgiving and December
+pumpkin,0.30,0.25,0.25,0.25,0.25,0.25,0.30,0.70,1.90,2.60,2.30,0.70,pumpkin and maple flavors arrive in late August and fade after Thanksgiving
+grilling,0.55,0.60,0.80,1.05,1.55,1.75,1.80,1.55,1.10,0.80,0.65,0.70,outdoor cooking from Memorial Day through Labor Day with a small holiday-roast bump in December
+chili_gameday,1.30,1.35,0.95,0.80,0.70,0.65,0.65,0.75,1.05,1.20,1.10,1.10,chili and wing season runs with football; the February peak is the championship game
+soup_stew,1.45,1.35,1.10,0.85,0.70,0.60,0.60,0.65,0.90,1.20,1.30,1.35,cold-weather braises soups and stocks
+holiday_gift,0.40,0.45,0.40,0.45,0.70,0.45,0.40,0.40,0.50,0.80,2.40,5.20,gift sets and premium items; Mother's Day bump in May; the year is decided in the six weeks before Christmas
+lunar_new_year,1.30,1.30,0.90,0.85,0.85,0.85,0.85,0.90,0.95,0.95,1.00,1.10,Chinese and Vietnamese pantry items; the event calendar adds a spike in the two weeks before Lunar New Year
+diwali,0.85,0.85,0.90,0.90,0.90,0.90,0.90,0.95,1.05,1.25,1.35,1.00,Indian spices and sweets spices; the event calendar adds a spike in the three weeks before Diwali
+pickling,0.40,0.40,0.50,0.60,0.80,1.30,1.90,2.30,1.80,0.90,0.55,0.50,home canning and pickling with the summer harvest
+thanksgiving,0.60,0.55,0.60,0.70,0.65,0.60,0.60,0.65,0.85,1.30,3.20,1.40,sage thyme poultry seasoning and brine; the week before Thanksgiving carries most of November
+summer_iced,0.60,0.60,0.75,0.95,1.25,1.55,1.70,1.55,1.10,0.80,0.60,0.60,iced tea mint lime and chile-lime
+hot_tea,1.40,1.30,1.15,0.95,0.80,0.70,0.65,0.70,0.90,1.15,1.30,1.45,hot tea and chai season
