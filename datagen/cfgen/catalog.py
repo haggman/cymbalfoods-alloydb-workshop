@@ -46,6 +46,23 @@ def _variant_origin(v: str) -> tuple[str, str | None]:
     return v.strip(), None
 
 
+# pantry families whose variants belong to different cuisines (content/pantry.csv tags the family as a whole)
+VARIANT_CUISINES = {
+    "pastes": {"Harissa": ["north_african"], "Rose Harissa": ["north_african"], "Red Curry": ["thai"], "Green Curry": ["thai"],
+               "Massaman Curry": ["thai"], "Tikka Masala": ["indian"], "Chipotle Adobo": ["mexican"]},
+    "asian_sauces": {"Hoisin": ["chinese"], "Black Bean Garlic": ["chinese"], "Teriyaki": ["japanese"], "Ponzu": ["japanese"],
+                     "Gochujang": ["korean"], "Ssamjang-Style Dipping": ["korean"], "Sweet Chili": ["thai"]},
+    "chili_oil": {"Sichuan Red": ["chinese"], "Calabrian": ["italian"], "Chile de Arbol": ["mexican"]},
+}
+
+
+def _variant_cuisines(slug: str, label: str) -> list | None:
+    for key, tags in VARIANT_CUISINES.get(slug, {}).items():
+        if label == key or label.startswith(key + " ") or label.startswith(key + " ("):
+            return tags
+    return None
+
+
 def build(c: dict) -> dict[str, pd.DataFrame]:
     r = rng("catalog")
     spices = {s["slug"]: s for s in c["spices"]}
@@ -156,7 +173,8 @@ def build(c: dict) -> dict[str, pd.DataFrame]:
             add(name=f"{p['name']}, {label}" if label else p["name"], category_id=p["category"], product_type="pantry",
                 ingredient_id=sid, form=p["subtype"], origin_country=origin, is_organic="Organic" in label,
                 is_salt_free=True, heat_level=int(p["heat"]), flavor_tags=split(p["flavor_notes"]),
-                cuisine_tags=split(p["cuisine_tags"]), seasonality_profile=p["seasonality"], ambiguity_group=None,
+                cuisine_tags=_variant_cuisines(p["slug"], label) or split(p["cuisine_tags"]),
+                seasonality_profile=p["seasonality"], ambiguity_group=None,
                 x_slug=p["slug"], x_variant=label, x_pop=max(1, int(p["popularity"]) - (1 if vi >= 3 else 0)),
                 x_band=int(p["price_band"]), x_family=p["pack_family"], x_density="",
                 x_recipe=[(sid, 100.0)], x_batch="pack" if p["sourcing"] == "bulk_packed" else "receive_finished",

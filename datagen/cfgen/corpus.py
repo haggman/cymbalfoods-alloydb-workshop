@@ -23,7 +23,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-PROMPT_VERSION = "cf-v1.1"            # bump on ANY prompt, fact-block or QA change; names every artifact
+PROMPT_VERSION = "cf-v1.2"            # bump on ANY prompt, fact-block or QA change; names every artifact
 TYPES = ["product_descriptions", "reviews", "recipes", "supplier_quality_reports", "account_notes"]
 FACT_TABLES = {"product_descriptions": "product_description_facts", "reviews": "review_facts", "recipes": "recipe_facts",
                "supplier_quality_reports": "quality_report_facts", "account_notes": "account_note_facts"}
@@ -242,7 +242,8 @@ THEME_RE = {
     "clumping": r"clump|cak(e|ed|ing)\b|lump|brick|rock[- ]hard|hard(ened)? (block|mass)|solid",
     "stale": r"stale|weak|flat|faded|dull|bland|lifeless|little (aroma|flavor|smell)|no (aroma|flavor|smell)|old|lost",
     "too_hot": r"\bhot|heat|spic|fier|burn|kick",
-    "great_value": r"value|price|money|worth|deal|bargain|afford|cheap|lasts|last(ed)? (me|us|for)|stretch|bulk",
+    "great_value": r"value|price|money|worth|deal|bargain|afford|cheap|lasts|last(ed)? (me|us|for)|stretch|bulk|generous|"
+                   r"plenty|amount|quantity|volume|big (bag|jar|bottle|pouch)|large (bag|jar|bottle|pouch)|lots of",
     "wrong_cinnamon": r"cinnamon|ceylon|cassia|saigon|korintje",
     "leaking": r"leak|spill|seep|sticky|ooz|drip|mess",
     "musty_smell": r"must(y|iness)|damp|mildew|basement|moldy|mouldy|cellar",
@@ -542,7 +543,8 @@ SYSTEM = {
         "When the facts give a heat level, state it plainly and accurately: a product with no heat or mild heat must never be called "
         "fiery or very hot, and a hot one must say so. A smoked product must say it is smoky. When the facts list what it is often "
         "mistaken for, make clear which one this is and how it differs. Follow the opening hint, and do not start with the full "
-        "product name followed by 'is a'. Mention sizes at most once, briefly, or not at all. " + COMMON_RULES),
+        "product name followed by 'is a'; do use its everyday name somewhere (this smoked paprika, the Kenya AA). Mention sizes "
+        "at most once, briefly, or not at all. Describe flavor only from the facts. " + COMMON_RULES),
     "reviews": (
         "You write customer reviews for products bought from Cymbal Foods, a specialty spice and pantry retailer. Each review is by a "
         "different ordinary shopper with their own voice: some short and plain, some chatty, a few with a typo-free but casual tone. "
