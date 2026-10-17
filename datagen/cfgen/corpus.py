@@ -23,7 +23,8 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-PROMPT_VERSION = "cf-v1.3"            # bump on ANY prompt, fact-block or QA change; names every artifact
+PROMPT_VERSION = "cf-v1.3"            # bump on ANY prompt or fact-block change; names every artifact. A change to the
+                                      # checks alone needs no bump: they rerun over the saved documents on every run
 TYPES = ["product_descriptions", "reviews", "recipes", "supplier_quality_reports", "account_notes"]
 FACT_TABLES = {"product_descriptions": "product_description_facts", "reviews": "review_facts", "recipes": "recipe_facts",
                "supplier_quality_reports": "quality_report_facts", "account_notes": "account_note_facts"}
@@ -709,10 +710,16 @@ def _brand(text: str, facts: str = ""):
     return None
 
 
+_CONTRAST = re.compile(r"(?i)\b(unlike|than|rather than|instead of|compared (?:to|with)|as opposed to|not to be confused with|"
+                       r"mistaken for|confuse[ds]? (?:it |them )?with|differs? from|whereas|while)\b[^.;!?]{0,60}$")
+
+
 def _overstated(text: str):
-    """A heat word not negated within the three words before it ('without any fiery heat' is fine)."""
+    """A heat word said of this product: not negated within the three words before it ('without any fiery heat')
+    and not describing something it is contrasted with ('unlike fiery cayenne', which the facts ask for)."""
     for m in _HOT_WORDS.finditer(text):
-        if not _NEGATED.search(text[max(0, m.start() - 60):m.start()]):
+        before = text[max(0, m.start() - 80):m.start()]
+        if not _NEGATED.search(before[-60:]) and not _CONTRAST.search(before):
             return m.group(0)
     return None
 
