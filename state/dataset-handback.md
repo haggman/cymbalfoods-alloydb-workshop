@@ -1,6 +1,6 @@
 # Handback: the Cymbal Foods dataset
 
-Answers `state/handoff-dataset.md` · written by the dataset conversation · updated after each stage · last update Oct 16, 2026 (Stage 2 built)
+Answers `state/handoff-dataset.md` · written by the dataset conversation · updated after each stage · last update Oct 16, 2026 (Stage 2: first full run discarded, cf-v1.3)
 
 ## Status
 
@@ -8,7 +8,7 @@ Answers `state/handoff-dataset.md` · written by the dataset conversation · upd
 | :-- | :-- |
 | 0 · Design doc | **Approved Oct 16, 2026** |
 | 1 · Relational and clickstream generator | **Staged** by Patrick's Colab run of notebook 10 on Oct 16 (0 problems; every count and planted moment matched the build environment). A rerun is due for the gift-set sell-out change (now mid-afternoon Eastern on Dec 14) |
-| 2 · Text corpus | **Notebook 11 built and tested offline** (fake Gemini, 0.1 scale, sample and full modes, resume, staging and re-cut; pandas 2 and 3). **Waiting on Patrick's sample run** (`RUN_MODE = "sample"`) |
+| 2 · Text corpus | Two sample runs reviewed (cf-v1.0, cf-v1.1). The first full run (Oct 16) is **discarded**: it ran in the sample's runtime and used that run's cached code (cf-v1.1) and local facts, not dea21bb's. Fixed in cf-v1.3; **waiting on a full run in a fresh runtime** |
 | 3 · Legacy SQL Server package | Not started; waits on the Module 1 checks (DMS SQL Server → AlloyDB) |
 | 4 · Load test | Not started. A local PostgreSQL 16 check is done (below) |
 
@@ -30,12 +30,12 @@ gcloud storage buckets add-iam-policy-binding gs://class-demo \
 
 If section 3 · The bucket guard reports the write probe FAILED, the grant didn't take; the cell prints the same command with the account filled in.
 
-## Patrick's run: notebook 11 (sample)
+## Patrick's run: notebook 11 (full)
 
-After notebook 10 has been rerun with the gift-set change (the corpus is written from its fact files):
+1. Push the repo (changed: `datagen/cfgen/corpus.py`, `fake_gemini.py`, `pipeline/11-text-corpus.ipynb`).
+2. In Colab Enterprise, upload the new `pipeline/11-text-corpus.ipynb` over the old one, then **Runtime → Restart session** (or connect a new runtime). Set `RUN_MODE = "full"`, **Run all**, and paste back the box section 13 · Handback prints. About 30 minutes.
 
-1. Push the repo (new: `datagen/cfgen/corpus.py`, `gemini.py`, `fake_gemini.py`, `pipeline/11-text-corpus.ipynb`; changed: `facts.py`, `slicer.py`, `writer.py`, `slices.yaml`, `generate_dataset.py`, `tools/pg_load_check.py`, `README.md`).
-2. In the same lab project (the grant still holds), upload `pipeline/11-text-corpus.ipynb`, **Run all** with the defaults, and paste back the box section 13 · Handback prints. It holds every sample document with its facts, so it is long. A few cents, a few minutes.
+Section 2 now refuses to run with code left loaded by an earlier run, so a missed restart stops with a message instead of producing another stale corpus.
 
 ## Stage 2: what was built
 
@@ -56,6 +56,14 @@ Decisions and changes while building:
 - **Bug fixed in `facts.py`:** product-description facts listed blend ingredients as characters of the product id. The corpus builds its blend lists from `blend_components`, so the current v1 facts are unaffected.
 - **Slices:** `full` gets all five corpus groups, `aldb002_search` products, reviews, recipes and quality reports, `aldb003_agents` products and account notes. Each slice with vectors gets its own `indexes-vector.sql` (ScaNN, `num_leaves` ≈ √rows, `sq8`), listed in the manifest as `vector_index_files`. It goes into `index_files`, so the loader builds it, only if the slice says `vector_indexes: true`. Today none does, because Module 2 has students build and tune the index; the skeleton conversation decides.
 - **CSV writing is chunked** (1,000 rows at a time for vector tables), with byte-identical output. Measured with synthetic full-scale vectors: re-cutting every slice with the corpus takes about 13 minutes at 3.8 GB peak; `full` is 1.42 GB, `aldb002_search` 287 MB (about 12,500 review vectors), `aldb003_agents` 63 MB. A local PostgreSQL 16 with pgvector loads the corpus CSVs and applies every corpus foreign key.
+
+Changes after the first full run (cf-v1.3):
+
+- **Stale runtime, fixed three ways.** Section 2 drops any loaded `cfgen` modules before importing and checks the prompt version against the clone. Section 5 mirrors the tables and facts from the bucket on every run (checksums, deleting local leftovers). Samples, checkpoints, results and embeddings are saved under `corpus/<stage>/<prompt version>/<facts fingerprint>/`, so nothing written from other facts is ever reused. The discarded run's files under `corpus/checkpoints/cf-v1.1/` and `corpus/results/cf-v1.1/` are harmless and can be deleted.
+- **QA false positives removed:** "medicinal" as a flavor word (cloves), "healthy" about stock or as a measure, "tones", "follow-ups", "nestle" as a verb, "prompt" and "I must say", and "damp" outside a musty smell. Brands that are also ordinary words or names (Tone's, Morton, Target, Lodge, UPS, Domino, Amazon) match only as the brand is written, and never when the word is in the document's own facts (a contact named Morton).
+- **Recipes:** literal `\n` and steps run together on one line are laid out one step per line (layout only, never wording); the hard floor is 80 words (a pot of tea is short); a product's origin in parentheses may be dropped; the product notes in the fact block moved to their own line, and copying them into the ingredients is a hard failure.
+- **Repairs say exactly what's missing:** the specific theme ("say plainly that it is good value") and the specific product name, instead of a generic note. Reviews whose title repeats the body are a hard failure.
+- **Kept with a flaw.** After the last repair round, a document that fails only on something harmless (a non-planted review theme of value or heat, a missing heat or smoke mention, a recipe naming or step-format slip, a length outside the hard range) is kept, listed in the handback, and flagged `kept:` in its results row. Never kept: brands, health, plumbing, invented numbers, musty or heat wording, and every planted document. Keeping more than 0.2% of a type (or more than 5) blocks staging.
 
 Open items:
 

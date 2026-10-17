@@ -23,7 +23,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-PROMPT_VERSION = "cf-v1.2"            # bump on ANY prompt, fact-block or QA change; names every artifact
+PROMPT_VERSION = "cf-v1.3"            # bump on ANY prompt, fact-block or QA change; names every artifact
 TYPES = ["product_descriptions", "reviews", "recipes", "supplier_quality_reports", "account_notes"]
 FACT_TABLES = {"product_descriptions": "product_description_facts", "reviews": "review_facts", "recipes": "recipe_facts",
                "supplier_quality_reports": "quality_report_facts", "account_notes": "account_note_facts"}
@@ -33,7 +33,7 @@ REVIEWS_PER_REQUEST = 10
 SAMPLE_N = 25
 
 # words: (soft low, soft high, hard low, hard high). Outside soft is counted; outside hard is regenerated.
-WORDS = {"product_descriptions": (90, 150, 60, 190), "reviews": (20, 120, 10, 150), "recipes": (150, 300, 110, 380),
+WORDS = {"product_descriptions": (90, 150, 60, 190), "reviews": (20, 120, 10, 150), "recipes": (150, 300, 80, 380),
          "supplier_quality_reports": (80, 160, 55, 200), "account_notes": (30, 120, 15, 160)}
 
 HEAT = {0: "no heat", 1: "mild", 2: "medium heat", 3: "hot", 4: "very hot", 5: "extremely hot"}
@@ -248,7 +248,7 @@ THEME_RE = {
     "leaking": r"leak|spill|seep|sticky|ooz|drip|mess",
     "musty_smell": r"must(y|iness)|damp|mildew|basement|moldy|mouldy|cellar",
 }
-MUSTY_RE = re.compile(r"must(y|iness)|mildew|moldy|mouldy|\bdamp\b", re.I)
+MUSTY_RE = re.compile(r"must(y|iness)|mildew|moldy|mouldy", re.I)     # not "damp": "sticky and damp", "damp earth"
 OPENINGS = ["Open with the verdict.", "Open with what they cooked with it.", "Open with how it compares to what they used before (no brand names).",
             "Open with how it arrived or how it looked when opened.", "Open with a short, blunt sentence.",
             "Open with who they cooked for.", "Open with the smell or taste.", "Open with why they bought it."]
@@ -318,7 +318,8 @@ def recipe_facts(T: dict) -> pd.DataFrame:
         for pid in pids:
             p = P.loc[pid]
             tags = ", ".join(_list(p.flavor_tags)[:3])
-            L.append(f"- {p['name']} ({p.form}{'; ' + tags if tags else ''}; {HEAT.get(int(p.heat_level), 'no heat')})")
+            L.append(f"- {p['name']}")
+            L.append(f"  about it: {p.form}{'; ' + tags if tags else ''}; {HEAT.get(int(p.heat_level), 'no heat')}")
         L.append(f"Length: about {int(r.target_words)} words in total")
         rows.append(dict(job_id=r.recipe_id, facts="\n".join(L), names=[P.name[p] for p in pids], cuisine=r.cuisine,
                          course=course, servings=int(r.servings), minutes=int(r.total_minutes)))
@@ -629,7 +630,19 @@ def parse(doc_type: str, text: str, job_ids: list[str]) -> dict:
             x = by.get(f"r{k + 1}", d[k])
             out[jid] = {"title": str(x.get("title") or "").strip(), "body": str(x.get("body") or "").strip()}
         return out
-    return {job_ids[0]: {f: str(d.get(f) or "").strip() for f in FIELDS[doc_type]}}
+    out = {f: str(d.get(f) or "").strip() for f in FIELDS[doc_type]}
+    if doc_type == "recipes":
+        out = {f: tidy_recipe(f, v) for f, v in out.items()}
+    return {job_ids[0]: out}
+
+
+def tidy_recipe(field: str, v: str) -> str:
+    """Layout only, never wording: literal '\\n' becomes a line break, and steps run together on one line
+    ('1. Heat... 2. Add...') go one per line."""
+    v = v.replace("\\n", "\n").replace("\r\n", "\n")
+    if field == "instructions" and len(re.findall(r"(?m)^\s*\d+[.)]\s", v)) < 3:
+        v = re.sub(r"(?<=[.!?])\s+(?=\d{1,2}[.)]\s)", "\n", v)
+    return "\n".join(l.rstrip() for l in v.split("\n")).strip()
 
 
 def embed_text(doc_type: str, out: dict) -> str:
@@ -645,19 +658,28 @@ def embed_text(doc_type: str, out: dict) -> str:
 # QA: hard failures are regenerated, soft flags are counted for a look
 # ==================================================================================================
 _PLUMBING = re.compile(r"(?i)\b(as an ai|language model|fact block|the facts|these facts|the notes say|the data|this data|dataset|"
-                       r"prompt|instructions? (?:say|given)|json|must say|points to make|cymbal foods data)\b")
-_BRANDS = re.compile(r"(?i)\b(mccormick|penzeys|spice islands|simply organic|frontier co-?op|burlap (?:&|and) barrel|morton|"
-                     r"diamond crystal|badia|tone'?s|durkee|lawry'?s|old bay|tabasco|cholula|frank'?s|kikkoman|goya|maldon|"
-                     r"trader joe'?s|whole foods|costco|walmart|amazon|kroger|target|safeway|publix|aldi|instacart|sysco|us foods|"
-                     r"restaurant depot|kitchenaid|le creuset|instant pot|vitamix|cuisinart|lodge|pyrex|yelp|google|facebook|"
-                     r"instagram|tiktok|youtube|pinterest|fedex|ups|usps|dhl|doordash|uber eats|grubhub|starbucks|nespresso|"
-                     r"keurig|hershey'?s|nestl[eé]|heinz|hellmann'?s|kraft|crisco|domino|c&h|land o'?lakes|kerrygold|"
+                       r"instructions? (?:say|given)|json|points to make|cymbal foods data)\b")
+# Brands that are only ever brands, matched in any case
+_BRANDS = re.compile(r"(?i)\b(mccormick|penzeys|spice islands|simply organic|frontier co-?op|burlap (?:&|and) barrel|"
+                     r"diamond crystal|badia|durkee|lawry'?s|old bay|tabasco|cholula|kikkoman|goya|maldon|"
+                     r"trader joe'?s|whole foods|costco|walmart|kroger|safeway|publix|aldi|instacart|sysco|us foods|"
+                     r"restaurant depot|kitchenaid|le creuset|instant pot|vitamix|cuisinart|pyrex|yelp|google|facebook|"
+                     r"instagram|tiktok|youtube|pinterest|fedex|usps|dhl|doordash|uber eats|grubhub|starbucks|nespresso|"
+                     r"keurig|hershey'?s|nestlé|toll house|heinz|hellmann'?s|kraft|crisco|c&h|land o'?lakes|kerrygold|"
                      r"ghirardelli|valrhona|lipton|twinings|tazo|bigelow|celestial seasonings|nielsen-massey|rodelle)\b")
+# Brands that are also ordinary words or names ("tones", "follow-ups", "nestle the fish", "Frank's kitchen"):
+# matched only as the brand is written
+_BRANDS_CS = re.compile(r"\b(Tone[’']s|Morton|Target|Lodge|UPS|Domino|Amazon|Frank[’']s Red ?Hot)\b")
 _HEALTH = re.compile(r"(?i)\b(anti-?inflammator\w*|inflammation|antioxidants?|immun\w*|detox\w*|"
                      r"cures? (?:a |an |the |your )?(?:colds?|ills|ailments?|illness\w*|headaches?|anything|what ails)|healing|heals?|"
-                     r"medicin\w*|remed(?:y|ies)|superfoods?|diseases?|cancer|diabet\w*|cholesterol|blood (?:sugar|pressure)|"
+                     r"medicines?|medications?|medicinal (?:benefits?|properties|uses?|purposes|qualities|value)|remed(?:y|ies)|"
+                     r"superfoods?|diseases?|cancer|diabet\w*|cholesterol|blood (?:sugar|pressure)|"
                      r"weight loss|metabolism|gut health|digestion|digestive|health benefits?|good for (?:you|your)\b|"
-                     r"nutrient-?dense|vitamins?|probiotic\w*|wellness|healthy(?! (?:pinch|dash|sprinkle|splash|dose|amount|handful|glug|drizzle|dusting|spoonful|squeeze|grind|shake)))\b")
+                     r"nutrient-?dense|vitamins?|probiotic\w*|wellness|healthy)\b")
+# "healthy" as a measure ("a healthy pinch") or about the business ("keep stock healthy") is not a health claim
+_HEALTHY_OK = re.compile(r"(?i)(healthy (?:pinch|dash|sprinkle|splash|dose|amount|handful|glug|drizzle|dusting|spoonful|squeeze|"
+                         r"grind|shake|portion|helping|serving|margin|sales|business|volume|order|stock|supply|appetite|pace)"
+                         r"|(?:stock|supply|supplies|inventory|levels?|business|sales|margins?|orders?|numbers|pars?)\s+(?:\w+\s+)?healthy)")
 _NOT_X = re.compile(r"(?i)(?:\b(?:it|this|that|they)(?:'s|’s| is| are|'re) not (?:just |only |merely )?[^.;!?]{1,50}?[,;—–-]\s*"
                     r"(?:it|this|that|they)(?:'s|’s| is| are|'re)\b)|(?:\bnot (?:just|only|merely) (?:a |an |the )?[^.;!?]{1,40}?[,;—–-]?\s*but\b)")
 _MD = re.compile(r"(\*\*|__|^#|^\s*[-*•]\s)", re.M)
@@ -666,6 +688,25 @@ _NUM = re.compile(r"(?<![\w.])\d{1,3}(?:,\d{3})+(?:\.\d+)?(?![\d,]*\d)|(?<![\w.]
 _HOT_WORDS = re.compile(r"(?i)\b(fiery|scorching|blazing|blistering|searing heat|intense heat|serious heat|fierce heat|very hot|"
                         r"extremely hot|five-alarm|tongue-scorching|mouth-burning)\b")
 _NEGATED = re.compile(r"(?i)\b(no|not|without|never|zero|nothing|none|isn't|is not|won't|free of)\b(?:\W+\w+){0,3}\W*$")
+
+
+def _health(text: str):
+    for m in _HEALTH.finditer(text):
+        if m.group(0).lower() == "healthy":
+            w = text[max(0, m.start() - 40):m.end() + 25]
+            if _HEALTHY_OK.search(w):
+                continue
+        return m.group(0)
+    return None
+
+
+def _brand(text: str, facts: str = ""):
+    """A real brand, unless the word is in the facts (an account or contact can be called Morton)."""
+    for rx in (_BRANDS, _BRANDS_CS):
+        for m in rx.finditer(text):
+            if m.group(0).lower() not in facts.lower():
+                return m.group(0)
+    return None
 
 
 def _overstated(text: str):
@@ -690,15 +731,15 @@ def _words(s: str) -> int:
     return len(str(s).split())
 
 
-def _common(text: str, hard: list, allow_md: bool = False):
+def _common(text: str, hard: list, allow_md: bool = False, facts: str = ""):
     if _PLUMBING.search(text):
         hard.append(f"plumbing: {_PLUMBING.search(text).group(0)!r}")
-    m = _BRANDS.search(text)
+    m = _brand(text, facts)
     if m:
-        hard.append(f"brand: {m.group(0)!r}")
-    m = _HEALTH.search(text)
+        hard.append(f"brand: {m!r}")
+    m = _health(text)
     if m:
-        hard.append(f"health: {m.group(0)!r}")
+        hard.append(f"health: {m!r}")
     m = _NOT_X.search(text)
     if m:
         hard.append(f"not-X-but-Y: {m.group(0)[:60]!r}")
@@ -726,8 +767,8 @@ def qa(doc_type: str, job: dict, out: dict | None) -> tuple[list, list]:
         hard.append(f"{w} words")
     elif not lo <= w <= hi:
         soft.append(f"{w} words")
-    _common(text, hard, allow_md=doc_type == "recipes")
     facts = job["facts"]
+    _common(text, hard, allow_md=doc_type == "recipes", facts=facts)
     stray = sorted(n for n in _nums(text) - _nums(facts) if n > 10 and not (doc_type == "recipes"))
     if doc_type == "reviews":
         if stray:
@@ -735,6 +776,8 @@ def qa(doc_type: str, job: dict, out: dict | None) -> tuple[list, list]:
         tw = _words(out["title"])
         if not 1 <= tw <= 12:
             hard.append(f"title {tw} words")
+        elif fold(out["title"]).strip(" .") == fold(out["body"]).strip(" ."):
+            hard.append("title repeats the body")
         for t in job["themes"]:
             if not re.search(THEME_RE[t], body + " " + out["title"], re.I):
                 hard.append(f"theme missing: {t}")
@@ -765,8 +808,11 @@ def qa(doc_type: str, job: dict, out: dict | None) -> tuple[list, list]:
     elif doc_type == "recipes":
         ing = fold(out["ingredients_text"])
         for n in job["names"]:
-            if fold(n) not in ing:
+            short = re.sub(r"\s*\([^)]*\)\s*$", "", n)      # "Green Cardamom, Ground (Guatemala)" may drop its origin
+            if fold(n) not in ing and fold(short) not in ing:
                 hard.append(f"product not named exactly: {n}")
+        if re.search(r"\([^)]*;[^)]*\)", out["ingredients_text"]) or re.search(r"(?i)about it:", text):
+            hard.append("product notes copied into the recipe")
         steps = [l for l in out["instructions"].splitlines() if re.match(r"\s*\d+[.)]\s", l)]
         if len(steps) < 3:
             hard.append(f"{len(steps)} numbered steps")
@@ -801,10 +847,20 @@ def qa(doc_type: str, job: dict, out: dict | None) -> tuple[list, list]:
         pref = job.get("preference")
         if isinstance(pref, str) and pref:
             key = re.findall(r"Saigon|Ceylon|Chili Powder|smoked paprika", pref, re.I)
-            if key and not re.search(re.escape(key[0]), text, re.I):
+            if key and not re.search(PREF_WORDS.get(key[0].lower(), re.escape(key[0])), text, re.I):
                 hard.append(f"preference missing: {key[0]}")
     return hard, soft
 
+
+PREF_WORDS = {"saigon": r"saigon|vietnam", "ceylon": r"ceylon|true cinnamon",
+              "chili powder": r"chil[ie] (?:powder|blend|seasoning)|classic blend", "smoked paprika": r"smoked paprika|piment[oó]n"}
+THEME_FIX = {"clumping": "Say plainly that it had clumped or caked into hard lumps.",
+             "stale": "Say plainly that it tasted weak or stale, with little aroma.",
+             "too_hot": "Say plainly that it was much hotter than they expected.",
+             "great_value": "Say plainly that it is good value for the money or that the amount lasts a long time.",
+             "wrong_cinnamon": "Say plainly that it was not the kind of cinnamon they wanted, and which kind they wanted.",
+             "leaking": "Say plainly that the container leaked in transit.",
+             "musty_smell": "Say plainly that it had a musty smell when opened."}
 
 _FIX = {
     "plumbing": "Never mention facts, notes, prompts, data or JSON in the text.",
@@ -819,7 +875,9 @@ _FIX = {
     "heat not mentioned": "Say plainly how hot it is.",
     "smoke not mentioned": "Say that it is smoky.",
     "product not named exactly": "In ingredients_text, name every listed Cymbal Foods product exactly as written in the list.",
-    "theme missing": "Make every point under 'Must say' come through clearly.",
+    "theme missing": "Make every point under 'Points to make' come through clearly.",
+    "title repeats the body": "The title is a short headline of 2 to 8 words, not the review itself.",
+    "product notes copied into the recipe": "Name each product only; do not copy its notes or put notes in parentheses.",
     "musty wording without the musty theme": "Do not mention any musty, damp or mildew smell.",
     "clumping wording without the theme": "Do not mention clumping or caking.",
     "stale wording without the theme": "Do not call it stale.",
@@ -835,6 +893,43 @@ _FIX = {
 }
 
 
+# After every repair round, a document that still fails only on these is kept, and listed in the handback.
+# Never kept: brands, health, plumbing, numbers, markdown, garbling, musty or heat wording, and any planted signal.
+TOLERABLE = {"product_descriptions": {"heat not mentioned", "smoke not mentioned"},
+             "reviews": {"theme missing: great_value", "theme missing: too_hot", "title repeats the body"},
+             "recipes": {"product not named exactly", "numbered steps"},
+             "supplier_quality_reports": set(),
+             "account_notes": set()}
+ACCEPT_MAX, ACCEPT_MIN = 0.002, 5     # keeping more than 0.2% of a type (or 5, if more) blocks staging
+
+
+def accept_limit(n: int) -> int:
+    return max(ACCEPT_MIN, int(ACCEPT_MAX * n))
+
+
+def planted(doc_type: str, job: dict) -> bool:
+    """A document a lab depends on: it must pass every check."""
+    if doc_type == "reviews":
+        return bool(set(job["themes"]) & {"musty_smell", "wrong_cinnamon", "clumping", "stale", "leaking"})
+    if doc_type == "supplier_quality_reports":
+        return isinstance(job.get("x_plant"), str)
+    if doc_type == "account_notes":
+        return job["topic"] in ("musty_paprika", "substitution") or isinstance(job.get("preference"), str)
+    return False
+
+
+def tolerable(doc_type: str, job: dict, hard: list) -> bool:
+    if not hard or planted(doc_type, job):
+        return False
+    ok = TOLERABLE[doc_type]
+    for h in hard:
+        key = h.split(":")[0]
+        if not (h in ok or key in ok or key.endswith("numbered steps") and "numbered steps" in ok
+                or (key.endswith(" words") and not key.startswith("title"))):
+            return False
+    return True
+
+
 def repair_note(doc_type: str, hard: list) -> str:
     """Tell the model what QA rejected, so a repair is a correction and not just a reroll."""
     lo, hi = WORDS[doc_type][:2]
@@ -845,6 +940,10 @@ def repair_note(doc_type: str, hard: list) -> str:
             fixes.append(f"Keep it between {lo} and {hi} words (the last draft was {key}).")
         elif key.startswith("title"):
             fixes.append("The title is 2 to 8 words.")
+        elif key == "theme missing":
+            fixes.append(THEME_FIX.get(h.split(":", 1)[1].strip(), _FIX[key]))
+        elif key == "product not named exactly":
+            fixes.append(f"In ingredients_text, name '{h.split(':', 1)[1].strip()}' exactly as written.")
         elif key.endswith("numbered steps"):
             fixes.append("Write the method as numbered steps, one per line: '1. ...'.")
         else:

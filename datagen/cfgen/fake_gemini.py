@@ -83,7 +83,7 @@ def _text(doc: str, prompt: str, seed: int) -> dict:
         hot = " It brings real heat." if re.match(r"(hot|very hot|extremely hot)", heat) else ""
         return {"description": f"{name.split(',')[0]} for the kitchen.{extra}{hot} " + _words(100, seed) + "."}
     if doc == "recipe":
-        names = re.findall(r"^- (.+) \(", prompt, re.M)
+        names = re.findall(r"^- (.+)$", prompt, re.M)
         ing = "\n".join(f"1 tsp {x}" for x in names) + "\n2 cups water\n1 onion"
         steps = "\n".join(f"{i}. " + _words(22, seed + i) + "." for i in range(1, 8))
         return {"title": "Weeknight Skillet Supper", "ingredients_text": ing, "instructions": steps}
