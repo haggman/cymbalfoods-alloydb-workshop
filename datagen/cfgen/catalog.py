@@ -223,6 +223,11 @@ def build(c: dict) -> dict[str, pd.DataFrame]:
             gsi.append((row.product_id, base_by_slug[slug], int(q)))
     gift_set_items = pd.DataFrame(gsi, columns=["gift_product_id", "product_id", "quantity"]).groupby(
         ["gift_product_id", "product_id"], as_index=False)["quantity"].sum()
+    # a gift set is as hot as its hottest item (the Heat Seeker's Collection is not a mild product)
+    heat_of = P.set_index("product_id").heat_level
+    gift_heat = gift_set_items.assign(h=gift_set_items.product_id.map(heat_of)).groupby("gift_product_id").h.max()
+    gm = P.product_type == "gift_set"
+    P.loc[gm, "heat_level"] = P.loc[gm, "product_id"].map(gift_heat).fillna(0).astype(int).to_numpy()
 
     # ---- SKUs -------------------------------------------------------------------------------------------
     packs = pd.DataFrame(c["packaging"])
@@ -230,8 +235,10 @@ def build(c: dict) -> dict[str, pd.DataFrame]:
     skus = []
     for row in P.itertuples():
         fam = row.x_family
-        dens = row.x_density if fam == "std" else ("light" if fam in ("saffron", "vanilla") else "")
-        cand = packs[(packs.pack_family == fam) & (packs.density == dens) & (packs.min_popularity <= row.x_pop)]
+        # salts pack like the standard spice line (packaging.csv has no salt family; without this no salt had a SKU)
+        pfam = "std" if fam == "salt" else fam
+        dens = row.x_density if pfam == "std" else ("light" if fam in ("saffron", "vanilla") else "")
+        cand = packs[(packs.pack_family == pfam) & (packs.density == dens) & (packs.min_popularity <= row.x_pop)]
         for pk in cand.itertuples():
             ch = split(pk.channels)
             net_oz = float(pk.net_oz) if pk.net_oz else (float(pk.net_qty) if pk.net_uom == "fl_oz" else float(pk.net_qty))

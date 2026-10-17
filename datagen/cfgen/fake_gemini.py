@@ -66,7 +66,8 @@ THEME_WORDS = {"clumped": "it had clumped into hard lumps", "stale": "it tasted 
 
 
 def _review(block: str, seed: int) -> dict:
-    must = _field(block, "Must say")
+    must = _field(block, "Points to make")
+    must = "" if must.startswith("none") else must
     bits = [v for k, v in THEME_WORDS.items() if k.lower() in must.lower()]
     n = int(re.search(r"about (\d+)", _field(block, "Length")).group(1)) if _field(block, "Length") else 40
     body = (". ".join(bits) + ". " if bits else "") + _words(max(8, n - 8 * len(bits)), seed) + "."

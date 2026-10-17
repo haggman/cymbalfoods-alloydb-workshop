@@ -23,7 +23,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-PROMPT_VERSION = "cf-v1.0"            # bump on ANY prompt, fact-block or QA change; names every artifact
+PROMPT_VERSION = "cf-v1.1"            # bump on ANY prompt, fact-block or QA change; names every artifact
 TYPES = ["product_descriptions", "reviews", "recipes", "supplier_quality_reports", "account_notes"]
 FACT_TABLES = {"product_descriptions": "product_description_facts", "reviews": "review_facts", "recipes": "recipe_facts",
                "supplier_quality_reports": "quality_report_facts", "account_notes": "account_note_facts"}
@@ -132,7 +132,8 @@ def _product_ctx(T: dict) -> dict:
     packs = T["skus"].groupby("product_id").pack_description.apply(list)
     bc = T["blend_components"].merge(ING[["name"]], left_on="ingredient_id", right_index=True)
     blend = {p: g.sort_values("pct", ascending=False)["name"].tolist() for p, g in bc.groupby("product_id")}
-    gifts = {p: [(P.name.get(x, x), int(q)) for x, q in zip(g.product_id, g.quantity)] for p, g in T["gift_set_items"].groupby("gift_product_id")}
+    gifts = {p: [(P.name.get(x, x), int(q), int(P.heat_level.get(x, 0))) for x, q in zip(g.product_id, g.quantity)]
+             for p, g in T["gift_set_items"].groupby("gift_product_id")}
     return dict(P=P, ING=ING, cats=cats, packs=packs, blend=blend, gifts=gifts)
 
 
@@ -143,6 +144,19 @@ def _heat_line(p, ing) -> str:
     return s
 
 
+FORM_CATEGORIES = {"SPICE", "HERB", "CHILE", "PEPPER", "AROMATIC", "SALT"}      # where "ground", "whole", "flakes" mean something
+HEAT_CATEGORIES = {"CHILE", "PEPPER", "BLEND"}                                  # where "no heat" is worth saying
+PLACEHOLDER_FLAVORS = {"varies by origin"}
+DESC_OPENINGS = ["Open with what it tastes and smells like.", "Open with the dish it is best in.", "Open with where it comes from.",
+                 "Open with what sets it apart.", "Open with how a cook uses it.", "Open with a short, plain sentence about what it is."]
+
+
+def _sizes(packs: list) -> str:
+    if len(packs) <= 2:
+        return "; ".join(packs)
+    return f"{len(packs)} sizes, from {packs[0]} to {packs[-1]}"
+
+
 def product_facts(T: dict) -> pd.DataFrame:
     X = _product_ctx(T)
     P, ING = X["P"], X["ING"]
@@ -150,9 +164,13 @@ def product_facts(T: dict) -> pd.DataFrame:
     rows = []
     for pid, p in P.iterrows():
         ing = ING.loc[p.ingredient_id] if isinstance(p.ingredient_id, str) and p.ingredient_id in ING.index else None
-        L = [f"Product: {p['name']}", f"Category: {X['cats'].get(p.category_id, p.category_id)}",
-             f"Kind: {KIND.get(p.product_type, p.product_type)}"]
-        if p.product_type != "gift_set":
+        flav = [f for f in dict.fromkeys(_list(p.flavor_tags) + (_list(ing.flavor_notes) if ing is not None else []))
+                if f not in PLACEHOLDER_FLAVORS]
+        smoky = bool(re.search(r"smok", " ".join([p["name"]] + flav), re.I))
+        L = [f"Product: {p['name']}", f"Category: {X['cats'].get(p.category_id, p.category_id)}"]
+        if p.product_type in ("blend", "gift_set"):
+            L.append(f"Kind: {KIND[p.product_type]}")
+        if p.category_id in FORM_CATEGORIES:
             L.append(f"Form: {p.form}")
         if isinstance(p.origin_country, str):
             L.append(f"Origin: {p.origin_country}")
@@ -160,48 +178,66 @@ def product_facts(T: dict) -> pd.DataFrame:
             L.append(f"Botanical name: {ing.botanical_name}")
         if ing is not None and len(_list(ing.aliases)):
             L.append("Also called: " + ", ".join(_list(ing.aliases)))
-        if p.product_type != "gift_set":
+        if p.product_type == "gift_set":
+            items = X["gifts"].get(pid, [])
+            heats = [h for _n, _q, h in items]
+            if heats and max(heats) > 0:
+                hottest = items[int(np.argmax(heats))][0]
+                L.append(f"Heat: every item is {HEAT[max(heats)]}" if min(heats) == max(heats) else
+                         f"Heat: from {HEAT[min(heats)]} to {HEAT[max(heats)]}; the hottest is {hottest}")
+        elif p.heat_level > 0 or p.category_id in HEAT_CATEGORIES or smoky or (
+                isinstance(p.ambiguity_group, str) and p.ambiguity_group in ("paprika", "pepper", "chile_powder")):
             L.append(f"Heat: {_heat_line(p, ing)}")
-        flav = list(dict.fromkeys(_list(p.flavor_tags) + (_list(ing.flavor_notes) if ing is not None else [])))
         if flav:
             L.append("Flavor: " + ", ".join(flav))
-        if len(_list(p.cuisine_tags)):
-            L.append("Good in: " + ", ".join(cuisine(t) for t in _list(p.cuisine_tags)) + " cooking")
+        ct = _list(p.cuisine_tags)
+        if p.category_id in ("TEA", "COFFEE"):
+            other = [cuisine(c) for c in ct if c != "tea"]
+            L.append("Use: brewing" + (f"; it also suits {', '.join(other)} cooking" if other and p.category_id == "TEA" else ""))
+        elif ct:
+            L.append("Good in: " + ", ".join(cuisine(c) for c in ct) + " cooking")
         if pid in X["blend"]:
             L.append("Blend ingredients, largest share first: " + ", ".join(X["blend"][pid]))
         if pid in X["gifts"]:
-            L.append("The set contains: " + "; ".join(f"{n}" + (f" (x{q})" if q > 1 else "") for n, q in X["gifts"][pid]))
+            L.append("The set contains: " + "; ".join(f"{n}" + (f" (x{q})" if q > 1 else "") for n, q, _h in X["gifts"][pid]))
         al = _list(p.allergens)
-        L.append("Allergens: " + (", ".join(al) if al else "none declared"))
+        if al:
+            L.append("Allergens: " + ", ".join(al))
         if p.is_salt_free and p.product_type == "blend":
             L.append("Salt-free: yes")
         if p.is_organic:
             L.append("Organic: yes")
-        L.append("Sizes: " + "; ".join(X["packs"].get(pid, [])))
+        packs = X["packs"].get(pid, [])
+        if packs:
+            L.append("Sizes: " + _sizes(packs))
         g = p.ambiguity_group if isinstance(p.ambiguity_group, str) else None
         if g and g in groups.groups and ing is not None:
             sib = groups.get_group(g)
             sib = sib[sib.index != p.ingredient_id]
             if len(sib):
-                L.append("Shoppers confuse it with: " + "; ".join(
+                L.append("Often mistaken for: " + "; ".join(
                     f"{n}" + (f" ({b})" if isinstance(b, str) and b != (ing.botanical_name or "") else "")
                     for n, b in zip(sib.name.head(4), sib.botanical_name.head(4))) +
-                    ". Say plainly which one this is and how it differs.")
+                    ". Make clear which one this is and how it differs.")
         L.append(f"Length: {WORDS['product_descriptions'][0]}–{WORDS['product_descriptions'][1]} words")
-        rows.append(dict(job_id=pid, facts="\n".join(L), name=p["name"], heat=int(p.heat_level),
-                         smoky=bool(re.search(r"smok", " ".join([p["name"]] + _list(p.flavor_tags)), re.I)),
+        L.append(_pick(pid, DESC_OPENINGS))
+        heat = max([h for _n, _q, h in X["gifts"].get(pid, [])] + [int(p.heat_level)])
+        rows.append(dict(job_id=pid, facts="\n".join(L), name=p["name"], heat=heat, smoky=smoky,
                          product_type=p.product_type, ambiguity_group=g, category_id=p.category_id))
     return pd.DataFrame(rows)
 
 
-THEME_TEXT = {
-    "clumping": "the product had clumped or caked into hard lumps",
-    "stale": "it tasted weak or stale, with little aroma",
-    "too_hot": "it was a lot hotter than they expected",
-    "great_value": "it is good value for the amount (no prices or figures)",
-    "leaking": "the container leaked, so it arrived sticky or partly spilled",
-    "musty_smell": "it had a musty, damp smell when they opened it",
+THEME_TEXT = {                      # short cues: the model says them in the shopper's own words
+    "clumping": "clumped or caked into hard lumps",
+    "stale": "weak or stale, little aroma",
+    "too_hot": "much hotter than expected",
+    "great_value": "good value for the amount (no prices or figures)",
+    "leaking": "container leaked in transit; arrived sticky or partly spilled",
+    "musty_smell": "musty, damp smell on opening",
 }
+LOW_STAR_REASONS = ["the flavor was not to their taste", "stronger than they like", "did not suit the dish they made",
+                    "they prefer a different style of this product", "bigger pack than they needed; they won't finish it",
+                    "the flavor was not what they pictured from the description"]
 THEME_RE = {
     "clumping": r"clump|cak(e|ed|ing)\b|lump|brick|rock[- ]hard|hard(ened)? (block|mass)|solid",
     "stale": r"stale|weak|flat|faded|dull|bland|lifeless|little (aroma|flavor|smell)|no (aroma|flavor|smell)|old|lost",
@@ -219,10 +255,10 @@ OPENINGS = ["Open with the verdict.", "Open with what they cooked with it.", "Op
 
 def _cinnamon_theme(name: str) -> str:
     if re.search(r"ceylon", name, re.I):
-        return "they expected the strong, spicy kick of cassia-type cinnamon, and this Ceylon is milder and more delicate than they wanted"
-    return ("they expected the mild, delicate flavor of Ceylon (true) cinnamon, and this is the bold, spicy cassia type"
+        return "wrong kind of cinnamon for them: wanted the strong, spicy cassia type; this Ceylon is milder"
+    return ("wrong kind of cinnamon for them: wanted mild, delicate Ceylon (true) cinnamon; this is the bold cassia type"
             if re.search(r"saigon|korintje|cassia", name, re.I) else
-            "it used a different kind of cinnamon than they expected")
+            "the cinnamon in it was a different kind than they expected")
 
 
 def review_facts(T: dict) -> pd.DataFrame:
@@ -242,15 +278,16 @@ def review_facts(T: dict) -> pd.DataFrame:
             if t == "wrong_cinnamon":
                 must.append(_cinnamon_theme(name))
             elif t == "leaking" and o.channel != "online":
-                must.append("the bottle had leaked in the bag on the way home, so it was sticky")
+                must.append("bottle leaked on the way home; sticky")
             else:
                 must.append(THEME_TEXT[t])
         L = [f"Product: {name} ({S.pack_description[r.sku_id]})",
              f"Bought: {how}, {_et(o.ordered_at):%B %Y}; reviewed {days} days later",
              f"Stars: {int(r.rating)} of 5",
              f"Reviewer: {SEGMENT.get(r.x_segment, 'a home cook')}",
-             ("Must say: " + "; and ".join(must)) if must else
-             "Must say: nothing in particular; write about how they used it, in a way that fits the stars",
+             ("Points to make: " + "; ".join(must)) if must else
+             (f"Points to make: none about quality; the low rating is because {_pick(r.review_id, LOW_STAR_REASONS)}"
+              if int(r.rating) <= 2 else "Points to make: none in particular; how they used it, in a way that fits the stars"),
              f"Length: about {int(r.target_words)} words",
              _pick(r.review_id, OPENINGS)]
         rows.append(dict(job_id=r.review_id, facts="\n".join(L), name=name, themes=themes, rating=int(r.rating),
@@ -288,6 +325,15 @@ def recipe_facts(T: dict) -> pd.DataFrame:
 
 
 MOISTURE_SPEC = {"herb": 11.0, "salt": 0.75}
+HARVESTED = {"chile", "peppercorn", "spice", "seed", "herb", "aromatic", "flower", "citrus", "specialty", "tea", "coffee"}
+REPORT_OPENINGS = ["Open with the lot or supplier and what was done.", "Open with the result.", "Open with the date and the inspection.",
+                   "Open with what was received or audited.", "Open with the reason for the inspection, if there is one; otherwise the result."]
+
+
+def _supplier_line(sp, country: str) -> str:
+    kind = SUPPLIER_KIND.get(sp.supplier_kind, sp.supplier_kind)
+    name = sp["name"]
+    return f"Supplier: {name} ({kind})" if country.lower() in name.lower() else f"Supplier: {name}, {country} ({kind})"
 
 CONDITIONAL_REASONS = [
     ("labels", "the lot number on several bags did not match the purchase order; corrected on receipt and released"),
@@ -323,7 +369,7 @@ def quality_facts(T: dict) -> pd.DataFrame:
         L = [f"Report type: {REPORT_TYPE[r.report_type]}", f"Date: {day(r.inspected_at)}",
              f"{'Auditor' if r.report_type == 'supplier_audit' else 'Inspector'}: {ST.full_name[r.inspector_staff_id]}, quality analyst, "
              f"{dc['name']} ({dc.city}, {dc.state})",
-             f"Supplier: {sp['name']}, {countries.get(sp.country_code, sp.country_code)} ({SUPPLIER_KIND.get(sp.supplier_kind, sp.supplier_kind)})"]
+             _supplier_line(sp, countries.get(sp.country_code, sp.country_code))]
         reason = action = None
         if r.report_type == "supplier_audit":
             L.append(f"Supplier quality tier: {sp.quality_tier}")
@@ -338,22 +384,23 @@ def quality_facts(T: dict) -> pd.DataFrame:
             ing = ING.loc[r.ingredient_id]
             L += [f"Lot: {r.lot_code}",
                   f"Ingredient: {ing['name']}" + (f"; botanical name {ing.botanical_name}" if isinstance(ing.botanical_name, str) else ""),
-                  f"Origin: {lot.origin_country}" + (f", harvest {int(lot.harvest_year)}" if pd.notna(lot.harvest_year) else ""),
+                  f"Origin: {lot.origin_country}" + (f", harvest {int(lot.harvest_year)}"
+                                                      if pd.notna(lot.harvest_year) and ing.ingredient_type in HARVESTED else ""),
                   f"Received: {num(float(lot.quantity_kg))} kg on {day(lot.received_at)}"]
             if r.report_type == "coa_review":
                 L.append("Scope: the supplier's certificate of analysis compared with our own receiving tests")
             if r.x_plant == "failed_lot_retest":
                 L.append("Why retested: restaurant customers reported a musty smell in products made from this lot")
-            res = ["Results (specification in brackets):"]
+            res = ["Results (limit in brackets):"]
             if f.get("moisture_pct") is not None:
                 # the house specification by ingredient type, above every released lot's range (supply.py);
                 # v1's fact files carry a tighter herb and salt figure that a few released lots exceed
                 spec = MOISTURE_SPEC.get(ing.ingredient_type, 12.0)
-                res.append(f"- Moisture: {f['moisture_pct']:g}% (max {spec:g}%)")
+                res.append(f"- Moisture: {f['moisture_pct']:g}% (limit {spec:g}%)")
             if f.get("volatile_oil_pct") is not None:
                 res.append(f"- Volatile oil: {f['volatile_oil_pct']:g}%")
-            res.append(f"- Total plate count: {f['total_plate_count_log_cfu_g']:g} log CFU/g (max {f['total_plate_count_spec_max']:g})")
-            res.append(f"- Foreign matter: {f['foreign_matter']}")
+            res.append(f"- Total plate count: {f['total_plate_count_log_cfu_g']:g} log CFU/g (limit {f['total_plate_count_spec_max']:g})")
+            res.append("- Foreign matter: " + ("trace found" if f["foreign_matter"] == "trace" else "none found"))
             if f.get("color_asta") is not None:
                 res.append(f"- Color: {int(f['color_asta'])} ASTA")
             L += res
@@ -365,16 +412,16 @@ def quality_facts(T: dict) -> pd.DataFrame:
                 action = "lot rejected and returned to the supplier"
             elif r.result == "conditional":
                 key, reason = _pick(r.report_id, CONDITIONAL_REASONS)
-                if key == "moisture" and not (f.get("moisture_pct") and f["moisture_pct"] >= 0.85 * MOISTURE_SPEC.get(ing.ingredient_type, 12.0)):
-                    reason = CONDITIONAL_REASONS[0][1]
-                if key == "sift" and f.get("foreign_matter") != "trace":
-                    reason = CONDITIONAL_REASONS[1][1]
+                ok_m = bool(f.get("moisture_pct") and f["moisture_pct"] >= 0.85 * MOISTURE_SPEC.get(ing.ingredient_type, 12.0))
+                if (key == "moisture" and not ok_m) or (key == "sift" and f.get("foreign_matter") != "trace"):
+                    reason = _pick(r.report_id + "/fallback", [x[1] for x in CONDITIONAL_REASONS[:3]])
                 action = "released with the condition noted"
             else:
                 reason = "all results within specification"
                 action = "released to production"
             L += [f"Result: {r.result}", f"Reason: {reason}", f"Action: {action}"]
         L.append(f"Length: about {int(r.target_words)} words")
+        L.append(_pick(r.report_id, REPORT_OPENINGS))
         rows.append(dict(job_id=r.report_id, facts="\n".join(L), report_type=r.report_type, result=r.result,
                          lot_code=r.lot_code if isinstance(r.lot_code, str) else None, x_plant=r.x_plant))
     return pd.DataFrame(rows)
@@ -400,6 +447,22 @@ TOPIC = {
 }
 
 
+COMPLAINT_TOPICS = {"delivery_issue", "clumping", "musty_paprika"}
+GROUND_WORDS = re.compile(r"ground|powder|granulated|fine\b|blend|seasoning|rub|spice\b|masala", re.I)
+FALLBACK_PREFERENCES = ["no substitutions on {item} without a call first", "always the largest pack of {item}, never two smaller ones",
+                        "{item} only; don't swap in the organic version without asking",
+                        "deliveries before lunch service, and {item} never backordered without a heads-up"]
+DELIVERY_PROBLEMS = ["the order arrived a day late", "the order came in short: {item} was missing",
+                     "the delivery missed its window and arrived after service had started", "the order arrived without {item}"]
+
+
+def note_type_for(topic: str, raw: str) -> str:
+    """facts.py drew note types independently of topics; a complaint must be about something, and a complaint topic is one."""
+    if topic in COMPLAINT_TOPICS:
+        return "complaint"
+    return "call" if raw == "complaint" else raw
+
+
 def note_facts(T: dict) -> pd.DataFrame:
     F = T["account_note_facts"]
     A = T["restaurant_accounts"].set_index("account_id")
@@ -408,20 +471,28 @@ def note_facts(T: dict) -> pd.DataFrame:
     P = T["products"].set_index("product_id")
     S = T["skus"].set_index("sku_id")
     cp = T["contract_prices"].sort_values(["account_id", "effective_from"])
-    usual = {a: list(dict.fromkeys(g.sku_id))[:3] for a, g in cp.groupby("account_id")}
-    sku_name = lambda s: f"{P.name[S.product_id[s]]} ({S.pack_description[s]})" if s in S.index else s
+    usual = {a: list(dict.fromkeys(g.sku_id)) for a, g in cp.groupby("account_id")}
+    pname = lambda s: P.name[S.product_id[s]] if s in S.index else s
+    sku_name = lambda s: f"{pname(s)} ({S.pack_description[s]})" if s in S.index else s
+    ground_skus = [s for s in S.index if GROUND_WORDS.search(pname(s)) and S.sold_wholesale[s]]
     rows = []
     for r in F.itertuples(index=False):
         a = A.loc[r.account_id]
         f = _obj(r.facts)
+        ntype = note_type_for(r.topic, r.note_type)
+        u = usual.get(r.account_id, [])
         L = [f"Account: {a.business_name}, {BUSINESS.get(a.business_type, a.business_type)} ({cuisine(a.cuisine)}), {a.city}, {a.state}",
              f"Contact: {a.contact_name}", f"Written by: {ST.full_name[r.staff_id]}, account rep",
-             f"Date: {day(r.noted_at)}", f"Note type: {NOTE_TYPE.get(r.note_type, r.note_type)}", f"Topic: {TOPIC[r.topic]}"]
+             f"Date: {day(r.noted_at)}", f"Note type: {NOTE_TYPE.get(ntype, ntype)}", f"Topic: {TOPIC[r.topic]}"]
+        pref = f.get("preference")
+        if r.topic == "preference" and not pref and u:
+            pref = _pick(r.note_id, FALLBACK_PREFERENCES).format(item=pname(_pick(r.note_id + "/i", u[:3])))
         if r.topic == "delivery_issue":
             dc = LOC.loc[a.serving_dc_id]
-            L.append(f"Their distribution center: {dc['name']} ({dc.city}, {dc.state})")
-        if f.get("preference"):
-            L.append(f"Preference: {f['preference']}")
+            what = _pick(r.note_id, DELIVERY_PROBLEMS).format(item=sku_name(_pick(r.note_id + "/i", u[:3])) if u else "one item")
+            L.append(f"What happened: {what}, from the {dc['name']} ({dc.city}, {dc.state})")
+        if pref:
+            L.append(f"Preference: {pref}")
         if f.get("contract_lines"):
             L.append("Contract prices: " + "; ".join(f"{x['sku']} at ${x['price']:,.2f}" for x in f["contract_lines"]))
         if r.topic == "contract_renewal" and pd.notna(a.contract_end):
@@ -433,15 +504,14 @@ def note_facts(T: dict) -> pd.DataFrame:
             L.append("Substituted: " + "; ".join(items[half:]))
         elif r.topic == "musty_paprika" and items:
             L.append("Items: " + "; ".join(items))
-        elif r.topic in ("clumping", "new_menu", "general_checkin", "seasonal_planning", "preference", "price_question",
-                         "delivery_issue", "contract_renewal") and not f.get("contract_lines"):
-            u = usual.get(r.account_id, [])
-            if u:
-                L.append(("Item: " if r.topic == "clumping" else "They usually buy: ") +
-                         ("; ".join(sku_name(s) for s in (u[:1] if r.topic == "clumping" else u))))
+        elif r.topic == "clumping":
+            mine = [s for s in u if GROUND_WORDS.search(pname(s))]
+            L.append("Item: " + sku_name(_pick(r.note_id, mine or ground_skus)))
+        elif r.topic in ("new_menu", "general_checkin", "seasonal_planning", "price_question", "contract_renewal") \
+                and not f.get("contract_lines") and u:
+            L.append("They usually buy: " + "; ".join(sku_name(s) for s in u[:3]))
         L.append(f"Length: about {int(r.target_words)} words")
-        rows.append(dict(job_id=r.note_id, facts="\n".join(L), topic=r.topic, note_type=r.note_type,
-                         preference=f.get("preference"), items=items))
+        rows.append(dict(job_id=r.note_id, facts="\n".join(L), topic=r.topic, note_type=ntype, preference=pref, items=items))
     return pd.DataFrame(rows)
 
 
@@ -456,7 +526,10 @@ def build_jobs(T: dict) -> dict:
 # ==================================================================================================
 COMMON_RULES = (
     "Use only the facts given. Never invent numbers, dates, prices, people, places, awards or company history. "
-    "Never name a real company, brand, store, website, app or delivery carrier; the only company you may name is Cymbal Foods. "
+    "The facts are notes for you: never copy their wording or their labels (such as 'pantry item', 'single-origin spice', "
+    "'often mistaken for' or 'points to make'); write naturally. "
+    "Never name a real company, brand, store, website, app or delivery carrier; the only company you may name is Cymbal Foods, "
+    "and only where it is natural. "
     "Make no health, nutrition or medical claims of any kind (nothing about health benefits, immunity, inflammation, digestion, "
     "antioxidants, vitamins or curing anything). Do not use the construction \"it's not X, it's Y\" or \"not just X, but Y\". "
     "Never mention facts, notes, prompts, data or instructions. Write plain prose in American English: no markdown, headings, "
@@ -465,33 +538,39 @@ COMMON_RULES = (
 SYSTEM = {
     "product_descriptions": (
         "You write product descriptions for the website of Cymbal Foods, a specialty spice and pantry retailer. Each description is "
-        "warm, concrete and useful to a cook: what it is, what it tastes and smells like, how hot it is, and two or three ways to use it. "
-        "State the heat level plainly and accurately: a product with no heat or mild heat must never be described as fiery or very hot, "
-        "and a smoked product must say it is smoky. When the facts say shoppers confuse it with something, say clearly which one this "
-        "is and how it differs. Mention a size only if it helps. " + COMMON_RULES),
+        "warm, concrete and useful to a cook: what it is, what it tastes and smells like, and two or three ways to use it. "
+        "When the facts give a heat level, state it plainly and accurately: a product with no heat or mild heat must never be called "
+        "fiery or very hot, and a hot one must say so. A smoked product must say it is smoky. When the facts list what it is often "
+        "mistaken for, make clear which one this is and how it differs. Follow the opening hint, and do not start with the full "
+        "product name followed by 'is a'. Mention sizes at most once, briefly, or not at all. " + COMMON_RULES),
     "reviews": (
         "You write customer reviews for products bought from Cymbal Foods, a specialty spice and pantry retailer. Each review is by a "
         "different ordinary shopper with their own voice: some short and plain, some chatty, a few with a typo-free but casual tone. "
-        "The tone must fit the stars. Every point under 'Must say' must come through clearly in the review, in the shopper's own words; "
-        "say nothing about smell, clumping, leaks or staleness unless it is listed. Do not mention the number of stars, the price, "
-        "or how many days it took. Each review has a short title of 2 to 8 words. " + COMMON_RULES),
+        "The tone must fit the stars. Every point under 'Points to make' must come through clearly, in the shopper's own words, written "
+        "as the shopper (I, we, my family); never copy the wording of the facts. Say nothing about smell, clumping, leaks, staleness "
+        "or the wrong kind of product unless it is listed: a low rating with no listed problem is about taste or fit, never quality. "
+        "Do not mention the number of stars, the price, or how many days it took. Each review has a short title of 2 to 8 words. "
+        + COMMON_RULES),
     "recipes": (
         "You are a recipe developer in the Cymbal Foods test kitchen. Write one complete, cookable recipe that uses every listed Cymbal "
-        "Foods product, naming each one exactly as written in the list. Add everyday ingredients as needed (no brand names). "
-        "ingredients_text is one ingredient per line, quantity first, in US units. instructions is numbered steps, one per line "
-        "('1. ...'), that fit the total time and the number of servings. The title is appealing and plain, under 10 words, and does "
-        "not include the word Cymbal. Amounts, temperatures and times in the recipe are yours to choose. " +
+        "Foods product. In ingredients_text, name each listed product exactly once, exactly as written in the list, with no 'Cymbal "
+        "Foods' in front; in the instructions, call it by a short everyday name (the cumin, the ponzu, the smoked paprika). Add "
+        "everyday ingredients as needed (no brand names). ingredients_text is one ingredient per line, quantity first, in US units, "
+        "with fractions (1/2 cup), never decimals. instructions is numbered steps, one per line ('1. ...'), that fit the total time "
+        "and the number of servings. The title is appealing and plain, under 10 words, and does not include the word Cymbal. "
+        "Amounts, temperatures and times in the recipe are yours to choose. " +
         COMMON_RULES.replace("Never invent numbers, dates, prices, people", "Never invent dates, prices, people")),
     "supplier_quality_reports": (
         "You are a quality analyst at Cymbal Foods writing the formal record of a quality inspection or supplier audit. Write it as one "
-        "or two paragraphs of plain, precise prose in the past tense, signed by nobody: what was inspected, the results against "
-        "specification, the result and the action taken. Quote every test value and specification exactly as given, with its units; "
-        "do not convert units or round. Include the lot code when there is one. " + COMMON_RULES),
+        "or two paragraphs of plain, precise prose in the past tense, the way a QA team writes for the file: what was inspected, the "
+        "results against their limits, the result and the action taken. Quote every test value and limit exactly as given, with its "
+        "units; do not convert units or round. Include the lot code when there is one. Follow the opening hint. " + COMMON_RULES),
     "account_notes": (
-        "You are an account rep at Cymbal Foods, a spice and pantry distributor to restaurants, writing a private note in the CRM "
-        "after talking with a customer. Notes are quick and practical, in the first person, past tense, the way a busy rep types: "
-        "what was discussed, what the customer wants, and the next step. Use the contact's first name. Quote item names and prices "
-        "exactly as given. " + COMMON_RULES),
+        "You are an account rep at Cymbal Foods, a spice and pantry distributor to restaurants, typing a private note in the CRM right "
+        "after talking with a customer. Busy-rep shorthand is fine: short sentences, first person, past tense, no greeting or "
+        "sign-off. Cover what was discussed, what the customer wants, and the next step. Use the contact's first name. Mention at most "
+        "two of the items they usually buy, by a short name, and only when they matter to the note. Quote prices exactly as given. "
+        "Do not name your own company. " + COMMON_RULES),
 }
 SCHEMA = {
     "product_descriptions": {"type": "OBJECT", "properties": {"description": {"type": "STRING"}}, "required": ["description"]},
@@ -564,7 +643,7 @@ def embed_text(doc_type: str, out: dict) -> str:
 # QA: hard failures are regenerated, soft flags are counted for a look
 # ==================================================================================================
 _PLUMBING = re.compile(r"(?i)\b(as an ai|language model|fact block|the facts|these facts|the notes say|the data|this data|dataset|"
-                       r"prompt|instructions? (?:say|given)|json|must say|cymbal foods data)\b")
+                       r"prompt|instructions? (?:say|given)|json|must say|points to make|cymbal foods data)\b")
 _BRANDS = re.compile(r"(?i)\b(mccormick|penzeys|spice islands|simply organic|frontier co-?op|burlap (?:&|and) barrel|morton|"
                      r"diamond crystal|badia|tone'?s|durkee|lawry'?s|old bay|tabasco|cholula|frank'?s|kikkoman|goya|maldon|"
                      r"trader joe'?s|whole foods|costco|walmart|amazon|kroger|target|safeway|publix|aldi|instacart|sysco|us foods|"
@@ -660,7 +739,13 @@ def qa(doc_type: str, job: dict, out: dict | None) -> tuple[list, list]:
         if "musty_smell" not in job["themes"] and MUSTY_RE.search(text):
             hard.append("musty wording without the musty theme")
         if "clumping" not in job["themes"] and re.search(r"clump|caked", text, re.I):
-            soft.append("clumping wording without the theme")
+            hard.append("clumping wording without the theme")
+        if "stale" not in job["themes"] and re.search(r"\bstale\b", text, re.I):
+            hard.append("stale wording without the theme")
+        elif "stale" not in job["themes"] and re.search(r"\b(bland|flat|weak|no flavor|lost its)\b", text, re.I):
+            soft.append("staleness-like wording without the theme")
+        if "leaking" not in job["themes"] and re.search(r"\bleak", text, re.I):
+            soft.append("leak wording without the theme")
         if re.search(r"\b[1-5](?:\.0)? stars?\b|\bfive stars\b|\bone star\b", text, re.I):
             soft.append("mentions stars")
     elif doc_type == "product_descriptions":
@@ -734,6 +819,8 @@ _FIX = {
     "product not named exactly": "In ingredients_text, name every listed Cymbal Foods product exactly as written in the list.",
     "theme missing": "Make every point under 'Must say' come through clearly.",
     "musty wording without the musty theme": "Do not mention any musty, damp or mildew smell.",
+    "clumping wording without the theme": "Do not mention clumping or caking.",
+    "stale wording without the theme": "Do not call it stale.",
     "musty wording outside the failed lot": "Do not mention any musty, damp or mildew smell.",
     "lot code missing": "Include the lot code exactly as written.",
     "fail result not stated": "State plainly that the lot failed and what was done.",
@@ -817,7 +904,8 @@ def pick_sample(doc_type: str, jobs: pd.DataFrame, n: int = SAMPLE_N, seed: int 
     elif doc_type == "account_notes":
         take(J[J.topic == "musty_paprika"], 3)
         take(J[J.topic == "substitution"], 3)
-        take(J[J.preference.notna()], 4)
+        take(J[J.preference.fillna("").str.contains("Saigon|Ceylon|Chili Powder|smoked paprika", regex=True)], 4)
+        take(J[J.topic == "preference"], 1)
         for t in ("contract_renewal", "price_question", "delivery_issue", "clumping", "new_menu", "seasonal_planning", "general_checkin"):
             take(J[J.topic == t], 1)
         for t in ("visit", "email"):
@@ -867,6 +955,7 @@ def assemble(doc_type: str, T: dict, outputs: dict, embeddings: dict | None) -> 
         out = {"supplier_quality_reports": D}
     else:
         D = F[["note_id", "account_id", "staff_id", "noted_at", "note_type"]].copy()
+        D["note_type"] = [note_type_for(tp, nt) for tp, nt in zip(F.topic, F.note_type)]
         D["noted_at"] = pd.to_datetime(D.noted_at, utc=True)
         D["note_text"] = get("note_text")
         cols = {"note_embedding": emb}

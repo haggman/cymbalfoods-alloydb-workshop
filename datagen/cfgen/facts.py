@@ -227,25 +227,77 @@ def account_notes(cat: dict, accounts: pd.DataFrame, O: pd.DataFrame, Lx: pd.Dat
     return N.drop(columns=["skus"])
 
 
+SWEET_FLAVORS = {"sweet", "warm", "floral", "vanilla", "chocolate", "caramel", "molasses", "honey", "fruity", "citrus", "nutty"}
+COURSE_KIND = {"main": "savory", "side": "savory", "soup": "savory", "appetizer": "savory", "sauce": "savory", "snack": "savory",
+               "breakfast": "savory", "dessert": "sweet", "baked good": "sweet", "drink": "drink"}
+COURSE_MINUTES = {"main": [30, 45, 60, 90, 120, 240], "side": [15, 20, 30, 45], "soup": [30, 45, 60, 90, 120],
+                  "appetizer": [15, 20, 30, 45, 60], "sauce": [10, 15, 20, 30, 60], "snack": [10, 15, 20, 30],
+                  "breakfast": [15, 20, 30, 45], "dessert": [15, 30, 45, 60, 120, 240], "baked good": [30, 45, 60, 90, 120, 240],
+                  "drink": [5, 10, 15, 20, 240]}
+COURSE_SERVES = {"drink": [1, 2, 4, 6, 8], "baked good": [8, 12, 12, 16, 24], "dessert": [4, 6, 8, 8, 12], "sauce": [4, 6, 8, 12]}
+ONE_PER_RECIPE = {"SAUCE", "OIL", "VINEGAR", "SALT", "CONDIMENT", "COFFEE"}     # categories a recipe uses at most one of
+
+
+def _fits(row, kind: str) -> bool:
+    """Whether a product belongs in a sweet, savory or drink recipe (facts pick products to suit the course)."""
+    cat, flav = row.category_id, set(row.flavor_tags)
+    if kind == "drink":
+        return cat in ("TEA", "COFFEE") or (cat in ("SPICE", "BAKING") and bool(flav & SWEET_FLAVORS) and row.heat_level == 0)
+    if kind == "sweet":
+        return cat == "BAKING" or (cat in ("SPICE", "BLEND", "COFFEE", "TEA") and bool(flav & SWEET_FLAVORS) and row.heat_level <= 1)
+    return cat not in ("TEA", "COFFEE", "BAKING")
+
+
 def recipes(cat: dict) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Recipes by cuisine and course. The course is chosen first, then 2-5 products that suit it: drinks are built on a
+    tea or coffee, desserts and baked goods on baking items and sweet spices, savory dishes on everything else, with at
+    most one sauce, oil, vinegar, salt, condiment or coffee each, and never two variants of one product."""
     r = rng("facts", "recipes")
     n = _cap(C.N_RECIPES)
     P = cat["products"]
     cand = P[P.product_type.isin(["single_origin", "blend", "pantry"]) & ~P.is_organic].reset_index(drop=True)
     tags = sorted({t for ts in cand.cuisine_tags for t in ts})
     tagw = np.array([sum(t in ts for ts in cand.cuisine_tags) for t in tags], dtype=float)
-    courses = np.array(["main", "side", "soup", "appetizer", "dessert", "baked good", "breakfast", "drink", "sauce", "snack"])
+    savory = np.array(["main", "side", "soup", "appetizer", "breakfast", "sauce", "snack"])
+    fits = {k: np.array([_fits(row, k) for row in cand.itertuples()]) for k in ("savory", "sweet", "drink")}
     rows, links = [], []
     ids = uuids(r, n)
     for k in range(n):
         t = tags[weighted_choice(r, tagw, 1)[0]]
-        pool = cand[[t in ts for ts in cand.cuisine_tags]]
+        has_tag = np.array([t in ts for ts in cand.cuisine_tags])
+        if t == "tea":
+            course = "drink"
+        elif t == "baking":
+            course = "baked good" if r.random() < 0.7 else "dessert"
+        elif t == "pickling":
+            course = ["side", "snack", "sauce"][int(r.integers(0, 3))]
+        else:
+            u = r.random()
+            course = "dessert" if u < 0.08 else ("drink" if u < 0.12 else savory[r.integers(0, len(savory))])
+        kind = COURSE_KIND[course]
+        pool = cand[has_tag & fits[kind]]
+        if (kind == "drink" and not pool.category_id.isin(["TEA", "COFFEE"]).any()) or (kind == "sweet" and pool.x_slug.nunique() < 2):
+            course, kind = savory[r.integers(0, len(savory))], "savory"       # nothing to build a drink or a sweet on
+            pool = cand[has_tag & fits[kind]]
+        if pool.x_slug.nunique() < 2:
+            pool = cand[has_tag]
         w = pool.x_pop.map(C.ZIPF_BY_POPULARITY).to_numpy()
-        m = int(min(len(pool), r.integers(2, 6)))
-        pick = pool.product_id.to_numpy()[r.choice(len(pool), size=m, replace=False, p=w / w.sum())]
-        course = "baked good" if t == "baking" and r.random() < 0.7 else ("drink" if t == "tea" else courses[r.integers(0, 9)])
-        rows.append(dict(recipe_id=ids[k], cuisine=t, course=course, servings=int(r.choice([2, 4, 4, 6, 6, 8, 12])),
-                         total_minutes=int(r.choice([15, 20, 30, 45, 60, 90, 120, 240])), product_ids=list(pick),
+        order = pool.index.to_numpy()[r.choice(len(pool), size=len(pool), replace=False, p=w / w.sum())]
+        want = int(r.integers(2, 6))
+        pick, slugs, cats = [], set(), set()
+        if kind == "drink":       # the drink is built on its tea or coffee
+            base = [i for i in order if cand.category_id[i] in ("TEA", "COFFEE")][:1]
+            order = base + [i for i in order if i not in base]
+        for i in order:
+            c_, s_ = cand.category_id[i], cand.x_slug[i]
+            if s_ in slugs or (c_ in ONE_PER_RECIPE and c_ in cats) or (kind == "drink" and c_ in ("TEA", "COFFEE") and pick):
+                continue
+            pick.append(cand.product_id[i]); slugs.add(s_); cats.add(c_)
+            if len(pick) >= min(want, 3 if kind == "drink" else 5):
+                break
+        rows.append(dict(recipe_id=ids[k], cuisine=t, course=course,
+                         servings=int(r.choice(COURSE_SERVES.get(course, [2, 4, 4, 6, 6, 8]))),
+                         total_minutes=int(r.choice(COURSE_MINUTES[course])), product_ids=list(pick),
                          target_words=int(r.integers(150, 300))))
         links += [(ids[k], p) for p in pick]
     return pd.DataFrame(rows), pd.DataFrame(links, columns=["recipe_id", "product_id"])
