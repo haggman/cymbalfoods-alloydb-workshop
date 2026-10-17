@@ -160,7 +160,8 @@ def generate_one(req: dict, *, get_client, model: str, config, parse, meter: Met
     for attempt in range(MAX_RETRIES):
         try:
             cfg = repair_config() if (req.get("repair") and repair_config) else config
-            resp = get_client().models.generate_content(model=model, contents=req["prompt"], config=cfg)
+            client = get_client()      # held for the whole call: a google-genai Client closes its connection when collected
+            resp = client.models.generate_content(model=model, contents=req["prompt"], config=cfg)
             cand = (getattr(resp, "candidates", None) or [None])[0]
             finish = str(getattr(cand, "finish_reason", "") or "").upper()
             if "MAX_TOKENS" in finish:
@@ -261,7 +262,8 @@ def embed_one(item: tuple, meter: Meter, *, get_client, model: str, dim: int, ta
     deadline = time.time() + RETRY_BUDGET_S
     for attempt in range(MAX_RETRIES):
         try:
-            r = get_client().models.embed_content(model=model, contents=text, config=cfg)
+            client = get_client()
+            r = client.models.embed_content(model=model, contents=text, config=cfg)
             v = np.asarray(r.embeddings[0].values, dtype=np.float32)
             if v.shape[0] != dim:
                 raise Fatal(f"{v.shape[0]} dims, expected {dim}")
