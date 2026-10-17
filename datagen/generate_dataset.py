@@ -168,7 +168,7 @@ def main() -> int:
         d = out / "slices" / name
         if d.exists():
             shutil.rmtree(d)
-        m = slicer.cut(name, specs[name], pq_dir, d, stage=1)
+        m = slicer.cut(name, specs[name], pq_dir, d)      # corpus tables are included when their Parquet exists
         slice_manifests[name] = dict(rows=m["totals"]["rows"], files=m["totals"]["files"], bytes=m["totals"]["bytes"],
                                      estimates=m["estimates"])
     timings["slices"] = round(time.time() - t, 1)

@@ -134,6 +134,7 @@ PLANT = {
     "stockout_item": "cinnamon_saigon", "stockout_dc": "DC-CE", "stockout_from": dt.date(2026, 12, 7),
     "stockout_substitute": "cinnamon_korintje", "stockout_po_due": dt.date(2027, 1, 14),
     "sellout_gift": "holiday_baking_set", "sellout_edition": 2026, "sellout_date": dt.date(2026, 12, 14),
+    "sellout_hour_et": 14,      # the last unit sells before 2 PM Eastern, so the date is Dec 14 in UTC and ET alike
     "peak_day": dt.date(2026, 11, 30),
     "fraud_ring_size": 14, "fraud_ring_window": (dt.date(2026, 11, 16), dt.date(2026, 11, 25)),
     "fraud_ring_addresses": 2, "fraud_ring_fingerprints": 3, "fraud_ring_missed": 5,

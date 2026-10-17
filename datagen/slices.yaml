@@ -2,19 +2,24 @@
 # A slice = groups (plus the groups they need) × an optional date window × an optional consumer cap.
 # Edit a slice here and re-run pipeline/10 with REGENERATE = False: the slices are re-cut from the existing Parquet.
 # Windows use the America/New_York date. Rows a kept row points at are always kept (closure).
+# corpus_* groups are cut only once notebook 11 has written their Parquet; until then the manifest lists them
+# under groups_missing. Every slice with vector tables gets its own indexes-vector.sql (ScaNN, num_leaves ≈ √rows);
+# set vector_indexes: true to add it to index_files so the loader builds it, or leave it for the lab to build.
 slices:
   full:
     description: Everything, three years. Demos, BigQuery and the archive.
-    groups: [reference, catalog, consumers, wholesale, orders, supply, inventory]
+    groups: [reference, catalog, consumers, wholesale, orders, supply, inventory,
+             corpus_products, corpus_reviews, corpus_recipes, corpus_quality, corpus_accounts]
     index_files: [indexes-baseline.sql, indexes-trace.sql, indexes-search.sql]
   aldb002_search:
     description: Module 2 notebook load (search, AI and the lot trace). Second half of 2026.
-    groups: [reference, catalog, consumers, wholesale, orders, supply]
+    groups: [reference, catalog, consumers, wholesale, orders, supply,
+             corpus_products, corpus_reviews, corpus_recipes, corpus_quality]
     window: [2026-07-01, 2026-12-31]
     index_files: [indexes-baseline.sql, indexes-trace.sql, indexes-search.sql]
   aldb003_agents:
     description: Module 3 setup-VM load (agents, secure views, QueryData). Last quarter of 2026.
-    groups: [reference, catalog, consumers, wholesale, inventory, orders]
+    groups: [reference, catalog, consumers, wholesale, inventory, orders, corpus_products, corpus_accounts]
     window: [2026-10-01, 2026-12-31]
     index_files: [indexes-baseline.sql, indexes-search.sql]
   aldb004_datacloud:

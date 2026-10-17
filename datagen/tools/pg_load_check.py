@@ -38,8 +38,12 @@ def main() -> int:
     run(psql, "postgres", f"DROP DATABASE IF EXISTS {a.db}")
     run(psql, "postgres", f"CREATE DATABASE {a.db}")
     t = time.time()
+    avail = set(run(psql, a.db, "SELECT name FROM pg_available_extensions").split())
     for e in m["extensions"]:
         if a.skip_corpus and e != "pg_trgm":
+            continue
+        if e not in avail:          # alloydb_scann, google_ml_integration: AlloyDB only
+            print(f"extension {e}: not available locally, skipped (AlloyDB only)")
             continue
         run(psql, a.db, f"CREATE EXTENSION IF NOT EXISTS {e} CASCADE")
     for f in m["schema_files"]:

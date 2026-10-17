@@ -121,10 +121,14 @@ def to_pg_csv(df: pd.DataFrame, table: str) -> bytes:
 
 
 def write_csv_gz(df: pd.DataFrame, table: str, path: Path) -> dict:
-    data = to_pg_csv(df, table)
+    """Written in chunks, so a table of 3,072-dim vectors never sits in memory as one CSV string (the bytes are
+    the same as a single write: gzip is fed one continuous stream)."""
+    vec = any(t.startswith("vector") for _, t, _, _ in BY_NAME[table].columns)
+    step = 1_000 if vec else 250_000
     path.parent.mkdir(parents=True, exist_ok=True)
     with open(path, "wb") as f:
         with gzip.GzipFile(filename="", mode="wb", fileobj=f, mtime=0, compresslevel=6) as gz:
-            gz.write(data)
+            for i in range(0, len(df), step):
+                gz.write(to_pg_csv(df.iloc[i:i + step], table))
     return dict(file=path.name, rows=int(len(df)), bytes=path.stat().st_size,
                 sha256=hashlib.sha256(path.read_bytes()).hexdigest())

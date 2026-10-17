@@ -142,7 +142,7 @@ def quality_reports(cat: dict, places: dict, suppliers: pd.DataFrame, sup: dict)
     itype = Q.ingredient_id.map(ING["ingredient_type"]).to_numpy()
     moist = np.where(has, LT.moisture_pct.to_numpy()[li], np.nan)
     voil = np.where(has, LT.volatile_oil_pct.to_numpy()[li], np.nan)
-    spec_moist = np.where(itype == "herb", 10.0, np.where(itype == "salt", 0.5, 12.0))
+    spec_moist = np.where(itype == "herb", 11.0, np.where(itype == "salt", 0.75, 12.0))   # above every released lot (supply.py ranges)
     tpc = np.round(r.uniform(2.0, 4.6, len(Q)), 1)
     fails = Q.result.to_numpy() == "fail"
     tpc[fails] = np.round(r.uniform(5.8, 6.6, int(fails.sum())), 1)
@@ -256,7 +256,7 @@ def product_descriptions(cat: dict) -> pd.DataFrame:
     packs = S.groupby("product_id").pack_description.apply(list)
     bc = cat["blend_components"].merge(ING[["name"]], left_on="ingredient_id", right_index=True)
     recipe = bc.sort_values(["product_id", "pct"], ascending=[True, False]).groupby("product_id").apply(
-        lambda g: [f"{n} {p:g}%" for n, p in zip(g.name, g.pct)], include_groups=False)
+        lambda g: [f"{n} {p:g}%" for n, p in zip(g["name"], g["pct"])], include_groups=False)
     out = []
     for p in P.itertuples():
         aliases = ING.loc[p.ingredient_id, "aliases"] if p.ingredient_id in ING.index else []

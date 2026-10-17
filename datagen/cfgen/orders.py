@@ -253,6 +253,14 @@ def build(c: dict, cat: dict, places: dict, consumers: pd.DataFrame, accounts: p
     utc = utc.fillna(pd.Series(pd.DatetimeIndex(local).tz_localize("UTC"), index=O.index) + pd.Timedelta(hours=5))
     late = utc >= pd.Timestamp(C.NOW_UTC)
     utc[late] = pd.Timestamp(C.NOW_UTC) - pd.to_timedelta(r.integers(60, 4 * 3600, int(late.sum())), "s")
+    # sell-out plant: on the sell-out day the gift set is gone by early afternoon Eastern
+    so_prod = np.nonzero(((P.x_slug == C.PLANT["sellout_gift"]) & (P.x_variant == str(C.PLANT["sellout_edition"]))).to_numpy())[0]
+    so_orders = np.unique(Lx.x_order.to_numpy()[np.isin(sku_prod[Lx.x_sku.to_numpy()], so_prod)])
+    cutoff = pd.Timestamp(C.PLANT["sellout_date"]).tz_localize("America/New_York") + pd.Timedelta(hours=C.PLANT["sellout_hour_et"])
+    clip = O.index.isin(so_orders) & (utc >= cutoff).to_numpy()
+    if clip.any():
+        rs = rng("orders", "sellout_time")
+        utc[clip] = cutoff.tz_convert("UTC") - pd.to_timedelta(rs.integers(5 * 60, 5 * 3600, int(clip.sum())), "s")
     O["ordered_at"] = utc.dt.floor("s")
     O = O.sort_values(["ordered_at", "x_channel"], kind="stable")
     order_pos = {old: new for new, old in enumerate(O.index)}

@@ -1,14 +1,14 @@
 # Handback: the Cymbal Foods dataset
 
-Answers `state/handoff-dataset.md` · written by the dataset conversation · updated after each stage · last update Oct 16, 2026 (Stage 1)
+Answers `state/handoff-dataset.md` · written by the dataset conversation · updated after each stage · last update Oct 16, 2026 (Stage 2 built)
 
 ## Status
 
 | Stage | State |
 | :-- | :-- |
 | 0 · Design doc | **Approved Oct 16, 2026** |
-| 1 · Relational and clickstream generator | **Built and validated at full lab scale in the build environment** (0 problems, byte-for-byte reproducible). **Waiting on Patrick's run of notebook 10**, which stages it to the bucket |
-| 2 · Text corpus | Next: notebook 11, 25 documents per type for review first. The fact tables it writes from already exist |
+| 1 · Relational and clickstream generator | **Staged** by Patrick's Colab run of notebook 10 on Oct 16 (0 problems; every count and planted moment matched the build environment). A rerun is due for the gift-set sell-out change (now mid-afternoon Eastern on Dec 14) |
+| 2 · Text corpus | **Notebook 11 built and tested offline** (fake Gemini, 0.1 scale, sample and full modes, resume, staging and re-cut; pandas 2 and 3). **Waiting on Patrick's sample run** (`RUN_MODE = "sample"`) |
 | 3 · Legacy SQL Server package | Not started; waits on the Module 1 checks (DMS SQL Server → AlloyDB) |
 | 4 · Load test | Not started. A local PostgreSQL 16 check is done (below) |
 
@@ -29,6 +29,38 @@ gcloud storage buckets add-iam-policy-binding gs://class-demo \
 3. **Where:** Colab Enterprise in the lab project. **What:** upload `pipeline/10-generate-dataset.ipynb`, connect a runtime, **Run all**, and paste back the box the last cell (section 10 · Handback) prints.
 
 If section 3 · The bucket guard reports the write probe FAILED, the grant didn't take; the cell prints the same command with the account filled in.
+
+## Patrick's run: notebook 11 (sample)
+
+After notebook 10 has been rerun with the gift-set change (the corpus is written from its fact files):
+
+1. Push the repo (new: `datagen/cfgen/corpus.py`, `gemini.py`, `fake_gemini.py`, `pipeline/11-text-corpus.ipynb`; changed: `facts.py`, `slicer.py`, `writer.py`, `slices.yaml`, `generate_dataset.py`, `tools/pg_load_check.py`, `README.md`).
+2. In the same lab project (the grant still holds), upload `pipeline/11-text-corpus.ipynb`, **Run all** with the defaults, and paste back the box section 13 · Handback prints. It holds every sample document with its facts, so it is long. A few cents, a few minutes.
+
+## Stage 2: what was built
+
+| File | Path | Note |
+| :-- | :-- | :-- |
+| corpus.py | `datagen/cfgen/` | Per type: the fact block, system instruction, JSON schema, hard and soft checks, repair notes, the 25-document sample picks, and assembly into the final tables. `PROMPT_VERSION = "cf-v1.0"` names every artifact |
+| gemini.py | `datagen/cfgen/` | CymbalGoal notebook 01's machinery as a module: Meter, Throttle, backoff, continuous pool with checkpoint callbacks, embeddings |
+| fake_gemini.py | `datagen/cfgen/` | Offline stand-in (`CF_FAKE_GEMINI=1`) used to test the notebook end to end; never used in a real run |
+| 11-text-corpus.ipynb | `pipeline/` | `RUN_MODE = "sample"` (25 per type, review page, cost calibrated from the sample) or `"full"` (generate, check and repair, embed, write the six corpus tables, re-cut and stage every slice). Resumes from bucket checkpoints |
+
+Decisions and changes while building:
+
+- **Online pool, not batch prediction.** The design allowed batch where the model is served; online is what notebook 01 proved, resumes cleanly, and needs no batch-quota checks. Batch would roughly halve the generation cost. The sample's handback gives the real projected cost; if it is high, batch is the lever.
+- **Reviews go 10 to a request**; a review being repaired goes alone, so its correction note can't change the others.
+- **The paprika retest says why it was retested** (restaurant complaints of a musty smell), and the checks keep "musty" out of every other review, report and note, so the P6 and P8 answers stay exact.
+- **Moisture specifications:** the fact files gave herbs 10% and salts 0.5%, which a few released lots exceed (supply.py draws up to 10.5% and 0.6%). Reports now quote herbs 11% and salts 0.75%; `facts.py` is fixed to match for the next regeneration.
+- **A recipe built around tea or coffee is a drink** (facts.py chose the course before the products, giving a few tea soups).
+- **Bug fixed in `facts.py`:** product-description facts listed blend ingredients as characters of the product id. The corpus builds its blend lists from `blend_components`, so the current v1 facts are unaffected.
+- **Slices:** `full` gets all five corpus groups, `aldb002_search` products, reviews, recipes and quality reports, `aldb003_agents` products and account notes. Each slice with vectors gets its own `indexes-vector.sql` (ScaNN, `num_leaves` ≈ √rows, `sq8`), listed in the manifest as `vector_index_files`. It goes into `index_files`, so the loader builds it, only if the slice says `vector_indexes: true`. Today none does, because Module 2 has students build and tune the index; the skeleton conversation decides.
+- **CSV writing is chunked** (1,000 rows at a time for vector tables), with byte-identical output. Measured with synthetic full-scale vectors: re-cutting every slice with the corpus takes about 13 minutes at 3.8 GB peak; `full` is 1.42 GB, `aldb002_search` 287 MB (about 12,500 review vectors), `aldb003_agents` 63 MB. A local PostgreSQL 16 with pgvector loads the corpus CSVs and applies every corpus foreign key.
+
+Open items:
+
+- **Notebook 10 and the corpus.** A notebook 10 run with `REGENERATE = True` re-cuts the slices without the corpus and, since slice folders are synchronized exactly, would remove the corpus CSVs from them (the corpus Parquet stays). Proposed fix: notebook 10 pulls the corpus Parquet back before cutting when `corpus/manifest.json` has the same facts fingerprint, and says the corpus is stale when it doesn't. Not made yet: it changes notebook 10, so it waits for Patrick's OK.
+- **Cost.** The design estimated about $55 batched or $110 online. The sample replaces that estimate before anything else is spent.
 
 ## Stage 1: what was built
 

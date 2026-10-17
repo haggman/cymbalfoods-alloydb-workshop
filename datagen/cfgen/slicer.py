@@ -51,7 +51,21 @@ def _et_date(ts: pd.Series) -> pd.Series:
     return pd.to_datetime(ts, utc=True).dt.tz_convert("America/New_York").dt.date
 
 
-def cut(spec_name: str, spec: dict, parquet_dir: Path, out_dir: Path, stage: int = 1) -> dict:
+def vector_index_sql(tables: dict) -> str:
+    """ScaNN indexes for the vector tables as loaded in this slice: num_leaves ≈ √rows (the CymbalGoal finding)."""
+    L = ["-- Cymbal Foods: ScaNN indexes for this slice's vector columns. Build AFTER the load.",
+         "-- num_leaves is about the square root of the rows this slice loads; tune scann.num_leaves_to_search at query time.",
+         "CREATE EXTENSION IF NOT EXISTS alloydb_scann;"]
+    for name, info in tables.items():
+        for col, ty, _, _ in BY_NAME[name].columns:
+            if ty.startswith("vector") and info["rows"] > 0:
+                leaves = max(1, int(round(np.sqrt(info["rows"]))))
+                L.append(f"CREATE INDEX IF NOT EXISTS {name}_{col}_scann ON {name}\n"
+                         f"    USING scann ({col} cosine) WITH (num_leaves = {leaves}, quantizer = 'sq8');")
+    return "\n".join(L) + "\n"
+
+
+def cut(spec_name: str, spec: dict, parquet_dir: Path, out_dir: Path, stage: int = 2) -> dict:
     groups = _groups(spec)
     tables = [t.name for t in T if t.group in groups and t.stage <= stage]
     data = {n: read_table(parquet_dir, n) for n in tables}
@@ -140,16 +154,26 @@ def cut(spec_name: str, spec: dict, parquet_dir: Path, out_dir: Path, stage: int
         total_vec += len(df) if vec else 0
     present = set(manifest_tables)
     cons = [c for c in constraints() if set(c["requires"]) <= present]
-    exts = sorted({e for g in groups for e in GROUP_EXTENSIONS.get(g, [])}, key=EXTENSION_ORDER.index)
+    loaded_groups = [g for g in groups if any(BY_NAME[n].group == g for n in present)]
+    exts = sorted({e for g in loaded_groups for e in GROUP_EXTENSIONS.get(g, [])}, key=EXTENSION_ORDER.index)
+    has_corpus = any(g.startswith("corpus") for g in loaded_groups)
+    vec_files = []
+    if any(v["has_vectors"] for v in manifest_tables.values()):
+        (out_dir / "indexes-vector.sql").write_text(
+            vector_index_sql({n: v for n, v in manifest_tables.items() if v["has_vectors"]}), encoding="utf-8")
+        vec_files = ["indexes-vector.sql"]
     # rough load estimate, calibrated on CymbalGoal (1.66M rows + 38k vectors: ~3 min COPY, ~7.5 min import)
     nfiles = sum(len(v["files"]) for v in manifest_tables.values())
     copy_s = total_rows / 11_000 + total_vec / 900
     manifest = dict(dataset="cymbalfoods", version="v1", scale=C.SCALE, seed=C.SEED, slice=spec_name,
                     description=spec.get("description", ""), spec=dict(groups=groups, window=[str(w0), str(w1)] if w else None, cap=spec.get("cap")),
                     extensions=exts,
-                    schema_files=["../../sql/schema.sql"] + (["../../sql/schema-corpus.sql"] if any(g.startswith("corpus") for g in groups) else []),
+                    schema_files=["../../sql/schema.sql"] + (["../../sql/schema-corpus.sql"] if has_corpus else []),
                     load_order=[n for n in LOAD_ORDER if n in manifest_tables], tables=manifest_tables,
-                    constraints=cons, index_files=[f"../../sql/{f}" for f in spec.get("index_files", [])],
+                    constraints=cons, index_files=[f"../../sql/{f}" for f in spec.get("index_files", [])] +
+                    (vec_files if spec.get("vector_indexes") else []),
+                    vector_index_files=vec_files,
+                    groups_missing=[g for g in groups if g not in loaded_groups],
                     totals=dict(rows=int(total_rows), vectors=int(total_vec), files=nfiles,
                                 bytes=int(sum(f["bytes"] for v in manifest_tables.values() for f in v["files"]))),
                     estimates=dict(copy_seconds=int(copy_s), import_seconds=int(copy_s * 2.5 + 30 * nfiles),

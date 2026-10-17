@@ -45,6 +45,10 @@ Stage 1 is built, run at full lab scale and validated. Where the build differs f
 | Determinism | byte-for-byte | **verified**: two runs, 521 data files, zero differences |
 | Load | estimates only | a local PostgreSQL 16 loads the heaviest setup-VM slice (`aldb005_ops`, 3.9M rows) in **35 s** (COPY 25.5 s, constraints 5 s, indexes 4.9 s; 808 MB). AlloyDB through a setup VM will be slower; Stage 4 measures it |
 
+## 0.2 · Stage 2: built (Oct 16)
+
+Notebook 11 and `cfgen/corpus.py` are built and tested offline; Patrick's sample run is next. Where the build differs from section 6, `state/dataset-handback.md` (Stage 2) lists it: the online pool rather than batch, reviews 10 to a request, house moisture specifications (herbs 11%, salts 0.75%), tea and coffee recipes as drinks, the slices that get each corpus group, and a per-slice `indexes-vector.sql`.
+
 ## 1 · The company in data
 
 ### 1.1 Story facts the data must honor

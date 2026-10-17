@@ -36,7 +36,7 @@ class Demand:
         avail &= launched[:, None] <= dd[None, :]
         avail &= ~(pd.notna(disc)[:, None] & (dd[None, :] > disc[:, None]))
         so = P.index[(P["x_slug"] == C.PLANT["sellout_gift"]) & (P["x_variant"] == str(C.PLANT["sellout_edition"]))]
-        avail[so, :] &= dd < np.datetime64(C.PLANT["sellout_date"])
+        avail[so, :] &= dd <= np.datetime64(C.PLANT["sellout_date"])      # on sale until mid-day; orders.py clips the times
         self.avail = avail
         tags = P["cuisine_tags"].tolist()
         ram = np.array([bool(set(t) & RAMADAN_TAGS) for t in tags])
